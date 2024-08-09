@@ -927,3 +927,38 @@ body::selection {
 .social-icons a:nth-child(6) i:hover {
   color: #3b5998;
 }
+
+@media all and (max-width: 600px) {
+   h1 {
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 64px;
+  color: #fefefe;
+}
+
+h2 {
+  font-size: 46px;
+  line-height: 54px;
+  font-weight: 400;
+  color: #fefefe;
+}
+
+h4 {
+  font-size: 20px;
+  font-weight: 400;
+  color: #fefefe;
+}
+
+h6 {
+  font-weight: 700;
+  font-size: 12px;
+  color: #fefefe;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 400;
+  color: #fefefe;
+  margin: 15px 0 20px 0; 
+    
+}
