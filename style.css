@@ -1,89 +1,213 @@
-@mixin center {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+/* =========================================
+   Global settings
+========================================= */
+
+:root {
+    --background-color: #2d3036;
+    --font-color: #eff5ed;
+
+    --font-size: 40px;
+    --letter-spacing: 0.0625em;
+
+    /*
+        The sentence contains 35 characters,
+        including spaces and punctuation.
+    */
+    --letter-count: 35;
+
+    --typing-duration: 6s;
+    --typing-delay: 1.5s;
+
+    --cursor-width: 1px;
 }
-//Completely customizable
-//--
-$font-size: 40px;
-$letter-spacing: 0.0625em; //This counts for 1px on 16px font;
-$letter-count: 35; //Number of letters in text !important
-$transition-time: 6s; //Typing speed
-$bg-color: #eff5ed;
-$mask-color: #eff5ed; //Change it to see how this works :)
-$font-color: #152860;
 
-$letter-size: calc(1ch + #{$letter-spacing});
-$cursor-width: 1px; //Change this to $letter-size if you want Insert:active effect
-//--
-$cursor-blink-duration: $letter-count;
-$font-width: calc(#{$letter-count}ch + #{$letter-count}*#{$letter-spacing});
 
-*, *:after, *:before {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+/* =========================================
+   Reset
+========================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================
+   Page
+========================================= */
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
 }
 
 body {
-	background: #eff5ed;
-	font-family: courier, serif; //Need monospace font for this to work
-	text-align: center;
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+    background-color: var(--background-color);
+    color: var(--font-color);
+
+    font-family: "Courier New", Courier, monospace;
+    text-align: center;
+
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+
+/* =========================================
+   Main section
+========================================= */
+
+.hero {
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   Text position
+========================================= */
+
 .hello {
-	@include center;
-	top: 25%;
+    position: absolute;
 
-	h3 {
-		position: relative;
-	    color: $font-color;
-	    text-align: center;
-	    white-space: nowrap;
-		font-size: $font-size;
-		letter-spacing: $letter-spacing;
-		width: $font-width;
+    top: 25%;
+    left: 50%;
 
-	    &:after {
-			display: block;
-			position: absolute;
-			content: '';
-			width: $font-width;
-			height: 2ex;
-			left: 0;
-			top: 0;
-			background: $mask-color;
-			animation: .6s blink $cursor-blink-duration, move $transition-time 1.5s forwards steps(1);
-			border-left: $cursor-width solid $font-color;
-			box-shadow: 0px 1ex 0px 0px $mask-color;
+    transform: translate(-50%, -50%);
 
-			@keyframes move {
-				@for $i from 1 through $letter-count {
-					$temp: 100/$letter-count;
-					$percent: $i*$temp;
-					#{$percent}% {
-						width: calc(#{$font-width} - (#{$i}ch + #{$i}*#{$letter-spacing}));
-						left: calc(#{$i}ch + #{$i}*#{$letter-spacing});
-					}
-				}
-			}
+    max-width: calc(100% - 2rem);
+}
 
-			@keyframes blink {
-				0% {
-			  		border-left-color: $font-color;
-				}
-				50% {
-			  		border-left-color: $font-color;
-				}
-				51% {
-			  		border-left-color: $mask-color;
-				}
-				100% {
-			  		border-left-color: $mask-color;
-				}
-			}
-	  	}
-	}
+
+/* =========================================
+   Typing text
+========================================= */
+
+.hello h1 {
+    position: relative;
+
+    width: 35ch;
+
+    overflow: hidden;
+
+    color: var(--font-color);
+
+    font-size: var(--font-size);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: var(--letter-spacing);
+
+    text-align: left;
+    white-space: nowrap;
+
+    border-right:
+        var(--cursor-width)
+        solid
+        var(--font-color);
+
+    animation:
+        typing
+        var(--typing-duration)
+        steps(35, end)
+        var(--typing-delay)
+        both,
+
+        cursor-blink
+        0.6s
+        step-end
+        infinite;
+}
+
+
+/* =========================================
+   Typing animation
+========================================= */
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 35ch;
+    }
+}
+
+
+/* =========================================
+   Cursor animation
+========================================= */
+
+@keyframes cursor-blink {
+    0%,
+    50% {
+        border-right-color: var(--font-color);
+    }
+
+    51%,
+    100% {
+        border-right-color: transparent;
+    }
+}
+
+
+/* =========================================
+   Tablet screens
+========================================= */
+
+@media screen and (max-width: 900px) {
+    :root {
+        --font-size: 30px;
+    }
+}
+
+
+/* =========================================
+   Phone screens
+========================================= */
+
+@media screen and (max-width: 600px) {
+    :root {
+        --font-size: clamp(15px, 4.5vw, 23px);
+    }
+
+    .hello {
+        top: 20%;
+    }
+}
+
+
+/* =========================================
+   Very small screens
+========================================= */
+
+@media screen and (max-width: 350px) {
+    :root {
+        --font-size: 13px;
+    }
+}
+
+
+/* =========================================
+   Accessibility
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .hello h1 {
+        width: 35ch;
+
+        border-right: none;
+
+        animation: none;
+    }
 }
