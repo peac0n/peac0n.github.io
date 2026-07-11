@@ -132,19 +132,25 @@ h3 {
     letter-spacing: 1pt;
 }
 
-p {
+.about-text {
     display: none;
     width: min(50%, 900px);
     margin: 0 auto;
+    text-align: left;
+}
+
+.about-text p {
+    display: block;
+    min-height: 1.8em;
+    margin: 0;
     font-size: clamp(12px, 1.2vw, 16px);
     font-weight: 900;
     line-height: 1.8;
     text-align: left;
-    white-space: pre-line;
 }
 
 @media screen and (max-width: 900px) {
-    p {
+    .about-text {
         width: 75%;
     }
 }
@@ -159,8 +165,11 @@ p {
         font-size: clamp(22px, 7vw, 30px);
     }
 
-    p {
+    .about-text {
         width: 100%;
+    }
+
+    .about-text p {
         font-size: 12px;
         line-height: 1.7;
     }
