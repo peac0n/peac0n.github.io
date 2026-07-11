@@ -59,7 +59,7 @@ function typeParagraphs(paragraphs, index, speed) {
 document.addEventListener("DOMContentLoaded", function () {
     const loadingPage = document.getElementById("loadingPage");
     const portfolioPage = document.getElementById("portfolioPage");
-    const heading = document.querySelector("#centeralign h4");
+    const heading = document.querySelector("#centeralign h5");
     const aboutText = document.querySelector(".about-text");
     const paragraphElements = Array.from(
         document.querySelectorAll(".about-text p")
@@ -75,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
         loadingPage.classList.add("hide");
         portfolioPage.classList.add("show");
 
-        typeEffect(headingNodes, 110, function () {
+        typeEffect(headingNodes, 95, function () {
             aboutText.style.display = "block";
-            typeParagraphs(paragraphNodes, 0, 120);
+            typeParagraphs(paragraphNodes, 0, 105);
         });
     }, 3000);
 });
