@@ -140,6 +140,7 @@ p {
     font-weight: 900;
     line-height: 1.8;
     text-align: left;
+    white-space: pre-line;
 }
 
 @media screen and (max-width: 900px) {
