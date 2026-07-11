@@ -1,30 +1,12 @@
-/* =========================================
-   Global settings
-========================================= */
-
 :root {
     --background-color: #2d3036;
     --font-color: #eff5ed;
-
     --font-size: 40px;
     --letter-spacing: 0.0625em;
-
-    /*
-        The sentence contains 35 characters,
-        including spaces and punctuation.
-    */
-    --letter-count: 35;
-
+    --text-width: calc(35ch + 2.1875em);
     --typing-duration: 6s;
     --typing-delay: 1.5s;
-
-    --cursor-width: 1px;
 }
-
-
-/* =========================================
-   Reset
-========================================= */
 
 *,
 *::before,
@@ -34,11 +16,6 @@
     padding: 0;
 }
 
-
-/* =========================================
-   Page
-========================================= */
-
 html,
 body {
     width: 100%;
@@ -47,91 +24,45 @@ body {
 
 body {
     min-height: 100vh;
-
     overflow-x: hidden;
-
     background-color: var(--background-color);
     color: var(--font-color);
-
     font-family: "Courier New", Courier, monospace;
     text-align: center;
-
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-
-/* =========================================
-   Main section
-========================================= */
-
 .hero {
     position: relative;
-
     width: 100%;
     min-height: 100vh;
 }
 
-
-/* =========================================
-   Text position
-========================================= */
-
 .hello {
     position: absolute;
-
     top: 25%;
     left: 50%;
-
     transform: translate(-50%, -50%);
-
     max-width: calc(100% - 2rem);
 }
 
-
-/* =========================================
-   Typing text
-========================================= */
-
 .hello h1 {
-    position: relative;
-
-    width: 35ch;
-
+    display: block;
+    width: 0;
     overflow: hidden;
-
     color: var(--font-color);
-
     font-size: var(--font-size);
     font-weight: 700;
     line-height: 1.3;
     letter-spacing: var(--letter-spacing);
-
     text-align: left;
     white-space: nowrap;
-
-    border-right:
-        var(--cursor-width)
-        solid
-        var(--font-color);
-
+    border-right: 1px solid var(--font-color);
     animation:
-        typing
-        var(--typing-duration)
-        steps(35, end)
-        var(--typing-delay)
-        both,
-
-        cursor-blink
-        0.6s
-        step-end
-        infinite;
+        typing var(--typing-duration) steps(35, end) var(--typing-delay) forwards,
+        cursor-blink 0.6s step-end infinite;
 }
-
-
-/* =========================================
-   Typing animation
-========================================= */
 
 @keyframes typing {
     from {
@@ -139,14 +70,9 @@ body {
     }
 
     to {
-        width: 35ch;
+        width: var(--text-width);
     }
 }
-
-
-/* =========================================
-   Cursor animation
-========================================= */
 
 @keyframes cursor-blink {
     0%,
@@ -160,25 +86,15 @@ body {
     }
 }
 
-
-/* =========================================
-   Tablet screens
-========================================= */
-
 @media screen and (max-width: 900px) {
     :root {
         --font-size: 30px;
     }
 }
 
-
-/* =========================================
-   Phone screens
-========================================= */
-
 @media screen and (max-width: 600px) {
     :root {
-        --font-size: clamp(15px, 4.5vw, 23px);
+        --font-size: clamp(14px, 4.2vw, 22px);
     }
 
     .hello {
@@ -186,28 +102,8 @@ body {
     }
 }
 
-
-/* =========================================
-   Very small screens
-========================================= */
-
 @media screen and (max-width: 350px) {
     :root {
-        --font-size: 13px;
-    }
-}
-
-
-/* =========================================
-   Accessibility
-========================================= */
-
-@media (prefers-reduced-motion: reduce) {
-    .hello h1 {
-        width: 35ch;
-
-        border-right: none;
-
-        animation: none;
+        --font-size: 12px;
     }
 }
