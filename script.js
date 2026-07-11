@@ -1,57 +1,83 @@
-function typeEffect(element, text, speed, callback) {
-    element.textContent = "";
+function prepareTyping(element) {
+    const textNodes = [];
+    const walker = document.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT
+    );
 
-    let index = 0;
+    let node;
+
+    while ((node = walker.nextNode())) {
+        textNodes.push({
+            node: node,
+            text: node.textContent
+        });
+
+        node.textContent = "";
+    }
+
+    return textNodes;
+}
+
+function typeEffect(textNodes, speed, callback) {
+    let nodeIndex = 0;
+    let characterIndex = 0;
 
     const timer = setInterval(function () {
-        if (index < text.length) {
-            element.textContent += text.charAt(index);
-            index++;
-        } else {
+        if (nodeIndex >= textNodes.length) {
             clearInterval(timer);
 
             if (callback) {
                 callback();
             }
+
+            return;
+        }
+
+        const currentNode = textNodes[nodeIndex];
+
+        if (characterIndex < currentNode.text.length) {
+            currentNode.node.textContent += currentNode.text.charAt(characterIndex);
+            characterIndex++;
+        } else {
+            nodeIndex++;
+            characterIndex = 0;
         }
     }, speed);
 }
 
-function typeParagraphs(paragraphs, texts, index, speed) {
+function typeParagraphs(paragraphs, index, speed) {
     if (index >= paragraphs.length) {
         return;
     }
 
-    typeEffect(paragraphs[index], texts[index], speed, function () {
-        typeParagraphs(paragraphs, texts, index + 1, speed);
+    typeEffect(paragraphs[index], speed, function () {
+        typeParagraphs(paragraphs, index + 1, speed);
     });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     const loadingPage = document.getElementById("loadingPage");
     const portfolioPage = document.getElementById("portfolioPage");
-    const heading = document.querySelector("#centeralign h3");
+    const heading = document.querySelector("#centeralign h4");
     const aboutText = document.querySelector(".about-text");
-    const paragraphs = Array.from(document.querySelectorAll(".about-text p"));
+    const paragraphElements = Array.from(
+        document.querySelectorAll(".about-text p")
+    );
 
-    const headingText = heading.textContent.trim();
-    const paragraphTexts = paragraphs.map(function (paragraph) {
-        return paragraph.textContent.trim();
-    });
+    const headingNodes = prepareTyping(heading);
 
-    heading.textContent = "";
-
-    paragraphs.forEach(function (paragraph) {
-        paragraph.textContent = "";
+    const paragraphNodes = paragraphElements.map(function (paragraph) {
+        return prepareTyping(paragraph);
     });
 
     setTimeout(function () {
         loadingPage.classList.add("hide");
         portfolioPage.classList.add("show");
 
-        typeEffect(heading, headingText, 95, function () {
+        typeEffect(headingNodes, 110, function () {
             aboutText.style.display = "block";
-            typeParagraphs(paragraphs, paragraphTexts, 0, 110);
+            typeParagraphs(paragraphNodes, 0, 120);
         });
     }, 3000);
 });
