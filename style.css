@@ -11,7 +11,7 @@ body {
 body {
     margin: 0;
     overflow: hidden;
-    background: #f4ede5;
+    background: #F4EDE5;
 }
 
 .loader {
@@ -33,23 +33,23 @@ body {
     animation: run 2s infinite ease-in-out;
 }
 
-.loader .one {
-    background: #f3b222;
+.one {
+    background: #F3B222;
     animation-delay: 1.5s;
 }
 
-.loader .two {
-    background: #f0653e;
+.two {
+    background: #F0653E;
     animation-delay: 1s;
 }
 
-.loader .three {
-    background: #b9c0c0;
+.three {
+    background: #B9C0C0;
     animation-delay: 0.5s;
 }
 
-.loader .four {
-    background: #8f7473;
+.four {
+    background: #8F7473;
 }
 
 @keyframes run {
