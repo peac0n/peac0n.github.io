@@ -1,7 +1,3 @@
-* {
-    box-sizing: border-box;
-}
-
 html,
 body {
     width: 100%;
@@ -25,56 +21,58 @@ body {
 
 .loader span {
     position: absolute;
+    top: 0;
+    left: 0;
     display: block;
-    width: 40%;
-    height: 40%;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4);
-    animation: run 2s infinite ease-in-out;
+    animation-name: run;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
 
-.one {
+.loader .one {
     background: #F3B222;
-    animation-delay: 1.5s;
+    animation-delay: -0.5s;
 }
 
-.two {
+.loader .two {
     background: #F0653E;
-    animation-delay: 1s;
+    animation-delay: -1s;
 }
 
-.three {
+.loader .three {
     background: #B9C0C0;
-    animation-delay: 0.5s;
+    animation-delay: -1.5s;
 }
 
-.four {
+.loader .four {
     background: #8F7473;
+    animation-delay: -2s;
 }
 
 @keyframes run {
-    0% {
+    0%,
+    100% {
         transform: translate(0, 0);
         border-radius: 50%;
     }
 
     25% {
-        transform: translate(150%, 0) scale(0.5);
+        transform: translate(60px, 0) scale(0.5);
         border-radius: 0;
     }
 
     50% {
-        transform: translate(150%, 150%);
+        transform: translate(60px, 60px);
         border-radius: 50%;
     }
 
     75% {
-        transform: translate(0, 150%) scale(0.5);
+        transform: translate(0, 60px) scale(0.5);
         border-radius: 0;
-    }
-
-    100% {
-        transform: translate(0, 0);
-        border-radius: 50%;
     }
 }
