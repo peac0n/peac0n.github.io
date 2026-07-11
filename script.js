@@ -35,9 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
         loadingPage.classList.add("hide");
         portfolioPage.classList.add("show");
 
-        typeEffect(heading, 180, function () {
+        typeEffect(heading, 110, function () {
             paragraph.style.display = "block";
-            typeEffect(paragraph, 180);
+            typeEffect(paragraph, 120);
         });
     }, 3000);
 });
