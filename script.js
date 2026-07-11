@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         typeEffect(heading, 85, function () {
             paragraph.style.display = "block";
-            typeEffect(paragraph, 60);
+            typeEffect(paragraph, 85);
         });
     }, 3000);
 });
