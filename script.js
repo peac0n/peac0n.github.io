@@ -1,5 +1,5 @@
 function typeEffect(element, speed, callback) {
-    const text = element.textContent.trim().replace(/\s+/g, " ");
+    const text = element.textContent.trim();
 
     element.textContent = "";
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const paragraph = document.querySelector("#centeralign p");
 
     const headingText = heading.textContent.trim();
-    const paragraphText = paragraph.textContent.trim().replace(/\s+/g, " ");
+    const paragraphText = paragraph.textContent.trim();
 
     heading.textContent = headingText;
     paragraph.textContent = paragraphText;
