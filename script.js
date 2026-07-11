@@ -1,6 +1,4 @@
-function typeEffect(element, speed, callback) {
-    const text = element.textContent.trim();
-
+function typeEffect(element, text, speed, callback) {
     element.textContent = "";
 
     let index = 0;
@@ -19,25 +17,41 @@ function typeEffect(element, speed, callback) {
     }, speed);
 }
 
+function typeParagraphs(paragraphs, texts, index, speed) {
+    if (index >= paragraphs.length) {
+        return;
+    }
+
+    typeEffect(paragraphs[index], texts[index], speed, function () {
+        typeParagraphs(paragraphs, texts, index + 1, speed);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const loadingPage = document.getElementById("loadingPage");
     const portfolioPage = document.getElementById("portfolioPage");
     const heading = document.querySelector("#centeralign h3");
-    const paragraph = document.querySelector("#centeralign p");
+    const aboutText = document.querySelector(".about-text");
+    const paragraphs = Array.from(document.querySelectorAll(".about-text p"));
 
     const headingText = heading.textContent.trim();
-    const paragraphText = paragraph.textContent.trim();
+    const paragraphTexts = paragraphs.map(function (paragraph) {
+        return paragraph.textContent.trim();
+    });
 
-    heading.textContent = headingText;
-    paragraph.textContent = paragraphText;
+    heading.textContent = "";
+
+    paragraphs.forEach(function (paragraph) {
+        paragraph.textContent = "";
+    });
 
     setTimeout(function () {
         loadingPage.classList.add("hide");
         portfolioPage.classList.add("show");
 
-        typeEffect(heading, 110, function () {
-            paragraph.style.display = "block";
-            typeEffect(paragraph, 120);
+        typeEffect(heading, headingText, 95, function () {
+            aboutText.style.display = "block";
+            typeParagraphs(paragraphs, paragraphTexts, 0, 110);
         });
     }, 3000);
 });
