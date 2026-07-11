@@ -1,362 +1,89 @@
-/* ========================================
-   Global Variables
-======================================== */
-
-:root {
-    --background-color: #292d36;
-    --text-color: #eff5ed;
-
-    --red-team-color: #ba3636;
-    --soc-color: #368aba;
-
-    --font-family: "Courier New", Courier, monospace;
-
-    --title-duration: 2.6s;
-    --subtitle-duration: 2.3s;
-    --subtitle-delete-duration: 1.8s;
-
-    --title-delay: 0.4s;
-    --subtitle-delay: 3.2s;
-    --subtitle-delete-delay: 7.5s;
-
-    --cursor-width: 2px;
+@mixin center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
+//Completely customizable
+//--
+$font-size: 40px;
+$letter-spacing: 0.0625em; //This counts for 1px on 16px font;
+$letter-count: 35; //Number of letters in text !important
+$transition-time: 6s; //Typing speed
+$bg-color: #eff5ed;
+$mask-color: #eff5ed; //Change it to see how this works :)
+$font-color: #152860;
 
+$letter-size: calc(1ch + #{$letter-spacing});
+$cursor-width: 1px; //Change this to $letter-size if you want Insert:active effect
+//--
+$cursor-blink-duration: $letter-count;
+$font-width: calc(#{$letter-count}ch + #{$letter-count}*#{$letter-spacing});
 
-/* ========================================
-   Reset
-======================================== */
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    min-height: 100%;
-    background-color: var(--background-color);
+*, *:after, *:before {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-    min-height: 100vh;
-    min-height: 100svh;
-
-    overflow-x: hidden;
-
-    background-color: var(--background-color);
-    color: var(--text-color);
-
-    font-family: var(--font-family);
-
-    text-rendering: optimizeLegibility;
+	background: #eff5ed;
+	font-family: courier, serif; //Need monospace font for this to work
+	text-align: center;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
-
-/* ========================================
-   Hero Section
-======================================== */
-
-.hero {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100svh;
-
-    padding:
-        clamp(6rem, 18vh, 12rem)
-        clamp(1rem, 5vw, 4rem)
-        4rem;
-}
-
-.hero__content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    width: min(100%, 75rem);
-
-    text-align: center;
-}
-
-
-/* ========================================
-   Typing Lines
-======================================== */
-
-.typing-line {
-    position: relative;
-
-    display: block;
-
-    max-width: 100%;
-
-    color: var(--text-color);
-
-    white-space: nowrap;
-}
-
-.typing-text {
-    display: inline-block;
-}
-
-
-/* ========================================
-   Main Title
-======================================== */
-
-.typing-line--title {
-    width: 31ch;
-
-    overflow: hidden;
-
-    font-size: clamp(1.4rem, 4.2vw, 3rem);
-    font-weight: 700;
-    line-height: 1.25;
-
-    opacity: 0;
-
-    border-right:
-        var(--cursor-width)
-        solid
-        transparent;
-
-    animation:
-        show-title 0s var(--title-delay) forwards,
-        type-title var(--title-duration)
-            steps(31, end)
-            var(--title-delay)
-            forwards,
-        title-cursor 0.7s
-            step-end
-            var(--title-delay)
-            5;
-}
-
-
-/* ========================================
-   Subtitle
-======================================== */
-
-.typing-line--subtitle {
-    width: 31ch;
-
-    margin-top: clamp(0.25rem, 1vw, 0.65rem);
-
-    overflow: hidden;
-
-    font-size: clamp(0.78rem, 2vw, 1.25rem);
-    font-weight: 400;
-    line-height: 1.5;
-
-    opacity: 0;
-
-    border-right:
-        var(--cursor-width)
-        solid
-        transparent;
-
-    animation:
-        show-subtitle 0s var(--subtitle-delay) forwards,
-
-        type-subtitle var(--subtitle-duration)
-            steps(31, end)
-            var(--subtitle-delay)
-            forwards,
-
-        subtitle-cursor 0.7s
-            step-end
-            var(--subtitle-delay)
-            6,
-
-        delete-subtitle var(--subtitle-delete-duration)
-            steps(31, end)
-            var(--subtitle-delete-delay)
-            forwards,
-
-        hide-subtitle 0s
-            calc(
-                var(--subtitle-delete-delay) +
-                var(--subtitle-delete-duration)
-            )
-            forwards;
-}
-
-
-/* ========================================
-   Highlighted Words
-======================================== */
-
-.red-team {
-    color: var(--red-team-color);
-    font-weight: 700;
-
-    text-decoration-line: underline;
-    text-decoration-color: var(--red-team-color);
-    text-decoration-thickness: 0.1em;
-    text-underline-offset: 0.16em;
-}
-
-.soc {
-    color: var(--soc-color);
-    font-weight: 700;
-
-    text-decoration-line: underline;
-    text-decoration-color: var(--soc-color);
-    text-decoration-thickness: 0.1em;
-    text-underline-offset: 0.16em;
-}
-
-
-/* ========================================
-   Title Animations
-======================================== */
-
-@keyframes show-title {
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes type-title {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 31ch;
-    }
-}
-
-@keyframes title-cursor {
-    0%,
-    100% {
-        border-right-color: transparent;
-    }
-
-    50% {
-        border-right-color: var(--text-color);
-    }
-}
-
-
-/* ========================================
-   Subtitle Animations
-======================================== */
-
-@keyframes show-subtitle {
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes type-subtitle {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 31ch;
-    }
-}
-
-@keyframes delete-subtitle {
-    from {
-        width: 31ch;
-    }
-
-    to {
-        width: 0;
-    }
-}
-
-@keyframes hide-subtitle {
-    to {
-        opacity: 0;
-        visibility: hidden;
-        border-right-color: transparent;
-    }
-}
-
-@keyframes subtitle-cursor {
-    0%,
-    100% {
-        border-right-color: transparent;
-    }
-
-    50% {
-        border-right-color: var(--text-color);
-    }
-}
-
-
-/* ========================================
-   Smaller Phone Screens
-======================================== */
-
-@media (max-width: 480px) {
-    .hero {
-        padding-top: clamp(5rem, 16vh, 8rem);
-        padding-inline: 0.75rem;
-    }
-
-    .typing-line--title {
-        font-size: clamp(1rem, 5.2vw, 1.45rem);
-    }
-
-    .typing-line--subtitle {
-        margin-top: 0.35rem;
-
-        font-size: clamp(0.58rem, 3vw, 0.85rem);
-    }
-}
-
-
-/* ========================================
-   Very Small Phone Screens
-======================================== */
-
-@media (max-width: 340px) {
-    .typing-line--title {
-        font-size: 0.92rem;
-    }
-
-    .typing-line--subtitle {
-        font-size: 0.56rem;
-    }
-}
-
-
-/* ========================================
-   Accessibility
-   Disable animations when requested
-======================================== */
-
-@media (prefers-reduced-motion: reduce) {
-    .typing-line--title {
-        width: auto;
-
-        opacity: 1;
-
-        border-right: none;
-
-        animation: none;
-    }
-
-    .typing-line--subtitle {
-        width: auto;
-
-        opacity: 1;
-
-        border-right: none;
-
-        animation: none;
-    }
+.hello {
+	@include center;
+	top: 25%;
+
+	h3 {
+		position: relative;
+	    color: $font-color;
+	    text-align: center;
+	    white-space: nowrap;
+		font-size: $font-size;
+		letter-spacing: $letter-spacing;
+		width: $font-width;
+
+	    &:after {
+			display: block;
+			position: absolute;
+			content: '';
+			width: $font-width;
+			height: 2ex;
+			left: 0;
+			top: 0;
+			background: $mask-color;
+			animation: .6s blink $cursor-blink-duration, move $transition-time 1.5s forwards steps(1);
+			border-left: $cursor-width solid $font-color;
+			box-shadow: 0px 1ex 0px 0px $mask-color;
+
+			@keyframes move {
+				@for $i from 1 through $letter-count {
+					$temp: 100/$letter-count;
+					$percent: $i*$temp;
+					#{$percent}% {
+						width: calc(#{$font-width} - (#{$i}ch + #{$i}*#{$letter-spacing}));
+						left: calc(#{$i}ch + #{$i}*#{$letter-spacing});
+					}
+				}
+			}
+
+			@keyframes blink {
+				0% {
+			  		border-left-color: $font-color;
+				}
+				50% {
+			  		border-left-color: $font-color;
+				}
+				51% {
+			  		border-left-color: $mask-color;
+				}
+				100% {
+			  		border-left-color: $mask-color;
+				}
+			}
+	  	}
+	}
 }
