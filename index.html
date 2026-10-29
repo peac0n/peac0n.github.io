@@ -1,42 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beacon</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="A slowly rotating eight-spoked wheel of aged gray sand, above a gently wind-swept interactive desert dune." />
+  <title>Sand Wheel · Desert Motion</title>
+  <link rel="preload" href="sand-wheel.png" as="image" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="loading-page" id="loadingPage">
-        <div class="loader">
-            <span class="one"></span>
-            <span class="two"></span>
-            <span class="three"></span>
-            <span class="four"></span>
-        </div>
+  <main class="scene" aria-label="A dark sand sculpture: an eight-spoked wheel rotating gently over a bed of interactive gray desert sand">
+    <div class="wheel-position" aria-hidden="true">
+      <div id="wheel" class="wheel">
+        <img src="sand-wheel.png"
+          alt="The exact eight-handled, eight-spoked aged-silver wheel reconstructed with dark, medium, and pale-gray grains of sand"
+          draggable="false" width="1044" height="1044" />
+      </div>
     </div>
-
-    <main id="portfolioPage">
-        <div id="table">
-            <div id="centeralign">
-                <h5>Cybersecurity Researcher, AKA AD Omniscient.</h5>
-
-                <div class="about-text">
-                    <p>Who dosen't love Beacon? Who kill and murder AD it self!</p>
-
-                    <p>Lets talk about me little bit (:</p>
-
-                    <p>i'm a <span class="rt">RT</span> and sometimes do <span class="bt">BT</span> things for fun! like i say am so in love with AD, and i have some certs like CRTP and CRTA that are aimed at AD attacks. but the real certs are getting <span class="dante">Dante</span> and <span class="zypher">Zypher</span>! the Pro Labs from HTB, which were the sensational certs of all time (:</p>
-
-                    <p>i have the shity CEH which is the must shit exams i ever done and dont blam me guys, its for the job thing to get a real job as fuck.</p>
-
-                    <p>for the ones who want to start learning about these things, please do it like u mean it. and start do it like u want to learn, not like u want to finish ashole!</p>
-
-                    <p>anyway fuck u!</p>
-                </div>
-            </div>
-        </div>
-    </main>
+    <canvas id="sand" aria-label="Gray desert sand dune. Move a mouse or finger over its surface to scatter grains gently." role="img"></canvas>
+  </main>
 </body>
 </html>
