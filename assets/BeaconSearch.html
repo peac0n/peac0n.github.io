@@ -169,13 +169,12 @@
         <span><span class="brand-name">Beacon<em>Search</em></span><span class="brand-under">SPL / SEARCH REFERENCE</span></span>
       </a>
       <div class="top-actions">
-        <button class="btn small subtle hidden" type="button" id="signout" title="Sign out" aria-label="Sign out">Sign out</button>
         <button class="btn primary" id="new-search"><svg><use href="#ico-plus"/></svg> Add search</button>
       </div>
     </header>
     <section class="intro" aria-label="Introduction">
       <div class="eyebrow"><span class="dot"></span> CURATED QUERY LIBRARY</div>
-      <p>Dont Worry Analyst! I Got You (; Everything You Need to Investigate</p>
+      <p>Dont Worry Analyst! Everything You Need to Investigate.</p>
     </section>
     <section aria-labelledby="letters-heading">
       <div class="section-top"><h2 class="section-label" id="letters-heading">Letters</h2><span><span class="sync-label" id="sync-label">Connecting</span><span class="subtext" id="letter-total"></span></span></div>
@@ -231,31 +230,63 @@
       <div class="dialog-actions"><button type="button" class="btn" data-close="letter-dialog">Cancel</button><button type="submit" class="btn primary">Add</button></div>
     </form>
   </dialog>
-  <dialog id="login-dialog" aria-labelledby="login-dialog-title">
-    <form id="login-form">
-      <div class="dialog-top"><h2 id="login-dialog-title">Edit access</h2><button type="button" class="icon-btn" data-close="login-dialog" aria-label="Close"><svg><use href="#ico-x"/></svg></button></div>
-      <div class="dialog-body">
-        <div class="form-group"><label for="login-email">Email</label><input id="login-email" type="email" autocomplete="username" required></div>
-        <div class="form-group"><label for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" required></div>
-        <p class="signin-error hidden" id="login-error" role="alert"></p>
-      </div>
-      <div class="dialog-actions"><button type="button" class="btn" data-close="login-dialog">Cancel</button><button type="submit" class="btn primary" id="login-submit">Sign in</button></div>
-    </form>
-  </dialog>
   <div id="toast" class="off" aria-live="polite" role="status"></div>
+    <!--
+      BEACONSEARCH · SINGLE HTML FILE · PUBLIC SHARED LIBRARY
+      =====================================================
+      This app contains HTML, CSS and JavaScript in ONE file. It imports
+      Firebase browser modules from the CDN. No npm or Firebase CLI needed.
+
+      One-time database permission setup (Firebase Console, not HTML):
+      1) Realtime Database > Rules.
+      2) Replace the locked rules with the JSON below and click Publish.
+      3) Host this HTML on GitHub Pages. Open the same URL on phone/PC.
+
+      IMPORTANT: Without authentication, all visitors can READ, ADD, EDIT,
+      and DELETE searches. Firebase configuration values are public. A
+      determined stranger can also change records directly via Firebase's API.
+      Never store confidential investigation queries, client details, logs,
+      tokens, private IP inventories, or credentials in this public database.
+      The letter naming convention is only for UI organization; it is NOT
+      access control, secrecy, or encryption.
+      Validation limits record format but cannot secure anonymous writes.
+      The free Spark plan will not automatically charge if quotas are reached.
+
+      FIREBASE REALTIME DATABASE RULES (paste JSON only):
+      {
+        "rules": {
+          ".read": false,
+          ".write": false,
+          "beaconsearch": {
+            "v2": {
+              ".read": true,
+              "letters": {
+                "$letter": {
+                  ".write": "$letter.matches(/^[A-Z]$/)",
+                  ".validate": "newData.isBoolean() && newData.val() === true"
+                }
+              },
+              "searches": {
+                "$id": {
+                  ".write": true,
+                  ".validate": "newData.hasChildren(['letter','category','title','spl','notes','createdAt','updatedAt','rev']) && newData.child('letter').isString() && newData.child('letter').val().matches(/^[A-Z]$/) && newData.child('category').isString() && newData.child('category').val().length > 0 && newData.child('category').val().length <= 48 && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('spl').isString() && newData.child('spl').val().length > 0 && newData.child('spl').val().length <= 50150 && newData.child('spl').val().beginsWith('index=*' + newData.child('letter').val() + '*') && newData.child('notes').isString() && newData.child('notes').val().length <= 1000 && newData.child('createdAt').isNumber() && newData.child('updatedAt').isNumber() && newData.child('rev').isNumber() && newData.child('rev').val() >= 1"
+                }
+              }
+            }
+          }
+        }
+      }
+    -->
   <script type="module">
-    // ONE-TIME SETUP: paste the web app config from your Firebase project here.
-    // These Firebase identifiers are public configuration, not private secrets.
+    // Web-only shared library. Publish the Realtime Database Rules above once.
+    // Firebase config is not a secret; database rules control access.
     const FIREBASE_CONFIG = {
-      apiKey: "",
-      authDomain: "",
-      databaseURL: "",
-      projectId: "",
-      appId: ""
+      apiKey: "AIzaSyA7Eke-3RPa3-wnHqd7J--LGJpt1l7eL28",
+      authDomain: "beaconsearch-80ff9.firebaseapp.com",
+      databaseURL: "https://beaconsearch-80ff9-default-rtdb.firebaseio.com",
+      projectId: "beaconsearch-80ff9",
+      appId: "1:708580176699:web:944b25aa362dbec897fd1e"
     };
-    // Copy the UID of the editor account you create under Firebase Authentication.
-    // The matching UID MUST also be set in the database Security Rules.
-    const EDITOR_UID = "";
 
     const $ = id => document.getElementById(id);
     const BASE = "beaconsearch/v2";
@@ -281,18 +312,16 @@
     const key = (s) => String(s).trim().toLowerCase();
     let data = {letters:[...DEFAULT_LETTERS], categories:{}, searches:[]};
     let selectedLetter = "D", selectedCategory = "All", query = "", categoryQuery = "";
-    let editId = null, editRev = null, pendingAction = null, ready = false, connected = false;
-    let auth = null, db = null, firebase = null, toastTimer = null, loadError = "";
+    let editId = null, editRev = null, ready = false, connected = false;
+    let db = null, firebase = null, toastTimer = null, loadError = "";
 
     function toast(message) {
       const el = $("toast"); el.textContent = message; el.classList.remove("off");
       clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.add("off"), 3300);
     }
-    function isEditor() { return !!(auth?.currentUser && EDITOR_UID && auth.currentUser.uid === EDITOR_UID); }
     function canSave() {
       if (!ready) { toast("Live library is not ready."); return false; }
       if (!connected) { toast("Offline — reconnect before making changes."); return false; }
-      if (!isEditor()) { requestEdit("search"); return false; }
       return true;
     }
     function validRecord(id, r) {
@@ -331,16 +360,15 @@
         msg.innerHTML = `<strong>${escapeHtml(loadError)}</strong> Your saved searches are not being loaded. Check the Firebase configuration, HTTPS hosting and database rules.`;
       } else if (!ready && !configured()) {
         msg.classList.remove("hidden");
-        msg.innerHTML = `<strong>Connect BeaconSearch</strong> — To activate live sharing, fill in <code>FIREBASE_CONFIG</code> and <code>EDITOR_UID</code> inside this HTML file, configure the supplied database rules, and publish this same file on an HTTPS website. No example searches have been inserted.`;
+        msg.innerHTML = `<strong>Connect BeaconSearch</strong> — Set <code>FIREBASE_CONFIG</code>, publish the Firebase Realtime Database rules embedded in this HTML, then host the file on GitHub Pages.`;
       } else if (ready && !connected) {
         msg.classList.remove("hidden");
         msg.innerHTML = `<strong>Connection lost.</strong> Existing searches may be out of date. Editing is paused until the connection returns.`;
       } else {
         msg.classList.add("hidden"); msg.textContent = "";
       }
-      $("signout").classList.toggle("hidden", !isEditor());
     }
-    function configured() { return ["apiKey","authDomain","databaseURL","projectId","appId"].every(x => Boolean(FIREBASE_CONFIG[x])) && Boolean(EDITOR_UID.trim()); }
+    function configured() { return ["apiKey","databaseURL","projectId","appId"].every(x => Boolean(FIREBASE_CONFIG[x])); }
     function updateHash() {
       const route = `${selectedLetter}${selectedCategory === "All" ? "" : "/" + encodeURIComponent(selectedCategory)}`;
       if (location.hash.slice(1) !== route) history.replaceState(null,"",`#${route}`);
@@ -396,7 +424,7 @@
       const code=scopeSPL(x.spl,x.letter);
       const dt=new Date(x.updatedAt).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
       article.innerHTML=`<div class="entry-title"><h4>${escapeHtml(x.title)}</h4>
-        <div class="entry-actions ${isEditor()?"":"hidden"}"><button type="button" class="icon-btn edit" title="Edit search">${icons("edit")} Edit</button>
+        <div class="entry-actions"><button type="button" class="icon-btn edit" title="Edit search">${icons("edit")} Edit</button>
         <button type="button" class="icon-btn delete" title="Delete search">${icons("trash")}</button></div></div>
         ${x.notes?`<p class="entry-notes">${escapeHtml(x.notes)}</p>`:""}
         <div class="code-panel"><div class="code-toolbar"><button type="button" class="copy-btn">${icons("copy")} <span>Copy</span></button><span class="code-lang">SPL</span></div><pre><code>${codeToHTML(code)}</code></pre></div>
@@ -465,13 +493,9 @@
       $("search-dialog").showModal();$("entry-title").focus();
     }
     function requestEdit(action) {
-      if(!ready){toast("Configure the live database before editing.");return;}
-      if(!connected){toast("Offline — editing is paused.");return;}
-      if(isEditor()) {if(action==="letter")openLetter();else openSearch();return;}
-      pendingAction=action;
-      $("login-error").classList.add("hidden");$("login-error").textContent="";
-      $("login-password").value="";
-      $("login-dialog").showModal();$("login-email").focus();
+      if (!ready) { toast("Live library is not available yet."); return; }
+      if (!connected) { toast("Offline — editing is paused."); return; }
+      if (action === "letter") openLetter(); else openSearch();
     }
     function openLetter(){$("new-letter-input").value="";$("letter-dialog").showModal();$("new-letter-input").focus();}
     async function deleteEntry(entry) {
@@ -488,7 +512,7 @@
       } catch(e) {console.error(e);toast("Delete failed. Nothing was removed from the server.");}
     }
     function lockSubmit(form,locked){const btn=form.querySelector('button[type="submit"]');btn.disabled=locked;btn.style.opacity=locked?".6":"";}
-    function saveAuthError(error){console.error("BeaconSearch:",error);const raw=String(error?.code||"");toast(raw.includes("permission-denied")?"Access denied — check database rules and editor UID.":"Could not sync. No change was confirmed.");}
+    function saveSyncError(error){console.error("BeaconSearch:",error);const raw=String(error?.code||"");toast(raw.includes("permission-denied")?"Permission denied — publish the Firebase Rules provided in the HTML.":"Could not sync. No change was confirmed.");}
     function bindEvents() {
       $("new-search").onclick=()=>requestEdit("search");
       $("global-search").addEventListener("input",e=>{query=e.target.value;renderResults();});
@@ -498,23 +522,6 @@
       // Enter only filters. It NEVER creates a new investigation category.
       $("category-input").addEventListener("keydown",e=>{if(e.key==="Enter")e.preventDefault();});
       $("entry-letter").onchange=()=>{updateCategorySuggestions();updateIndexPreview();};
-      $("login-form").onsubmit=async e=>{
-        e.preventDefault();if(!auth || !connected)return;
-        const form=e.currentTarget;lockSubmit(form,true);
-        const err=$("login-error");err.textContent="";err.classList.add("hidden");
-        try{
-          const result=await firebase.signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value);
-          if(result.user.uid!==EDITOR_UID){await firebase.signOut(auth);throw new Error("This account does not have edit access.");}
-          $("login-dialog").close();$("login-password").value="";
-          renderAll();
-          if(pendingAction==="letter")openLetter();else if(pendingAction==="search")openSearch();
-          pendingAction=null;
-        }catch(error){err.textContent="Sign in failed. Check your account and edit permissions.";err.classList.remove("hidden");console.warn("Sign in error",error?.code||error?.message);}
-        finally{lockSubmit(form,false);}
-      };
-      $("signout").onclick=async()=>{
-        try{await firebase.signOut(auth);renderAll();toast("Signed out");}catch(e){saveAuthError(e);}
-      };
       $("search-form").onsubmit=async e=>{
         e.preventDefault();if(!canSave())return;
         const form=e.currentTarget;
@@ -546,7 +553,7 @@
           $("category-input").value="";$("global-search").value="";
           $("search-dialog").close();renderAll();updateHash();
           toast(prior?"Search updated everywhere":"Search saved everywhere");
-        }catch(error){saveAuthError(error);}finally{lockSubmit(form,false);}
+        }catch(error){saveSyncError(error);}finally{lockSubmit(form,false);}
       };
       $("letter-form").onsubmit=async e=>{
         e.preventDefault();if(!canSave())return;
@@ -558,7 +565,7 @@
           await firebase.set(firebase.ref(db,`${BASE}/letters/${letter}`),true);
           selectedLetter=letter;selectedCategory="All";categoryQuery="";$("category-input").value="";
           $("letter-dialog").close();toast(`Added ${letter}`);updateHash();
-        }catch(error){saveAuthError(error);}finally{lockSubmit(form,false);}
+        }catch(error){saveSyncError(error);}finally{lockSubmit(form,false);}
       };
       document.querySelectorAll("[data-close]").forEach(btn=>btn.onclick=()=>$(btn.dataset.close).close());
       document.addEventListener("keydown",e=>{
@@ -579,13 +586,12 @@
       if(!configured()){loadError="";ready=false;renderAll();return;}
       try{
         const BASESDK="https://www.gstatic.com/firebasejs/13.1.0/";
-        const [appLib,dbLib,authLib]=await Promise.all([
-          import(BASESDK+"firebase-app.js"),import(BASESDK+"firebase-database.js"),import(BASESDK+"firebase-auth.js")
+        const [appLib, dbLib] = await Promise.all([
+          import(BASESDK+"firebase-app.js"), import(BASESDK+"firebase-database.js")
         ]);
-        firebase={...dbLib,...authLib};
+        firebase = dbLib;
         const app=appLib.initializeApp(FIREBASE_CONFIG);
-        db=dbLib.getDatabase(app);auth=authLib.getAuth(app);
-        authLib.onAuthStateChanged(auth,()=>renderAll(),error=>{console.error(error);});
+        db=dbLib.getDatabase(app);
         dbLib.onValue(dbLib.ref(db,".info/connected"),s=>{connected=s.val()===true;renderConnection();});
         dbLib.onValue(dbLib.ref(db,BASE),s=>{
           ready=true;loadError="";rebuildData(s.val());renderConnection();
