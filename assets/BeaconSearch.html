@@ -49,7 +49,7 @@
     .btn.subtle:hover { color: var(--accent); background: var(--surface); }
     .btn.small { padding: 6px 9px; font-size: 12px; }
     .intro { padding: 30px 0 24px; }
-    .intro p { color: var(--secondary); font-size: 15px; margin: 0; max-width: 720px; }
+    .intro p { color: var(--secondary); font-size: 15px; margin: 0; white-space: nowrap; }
     .intro .eyebrow { display: flex; align-items: center; gap: 8px; color: var(--accent); font: 12px/1.5 Consolas,Monaco,monospace; letter-spacing: .12em; margin-bottom: 11px; }
     .dot { display: inline-block; background: var(--accent); width: 6px; height: 6px; border-radius: 50%; box-shadow: 0 0 9px rgba(47,192,240,.45); }
     .section-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 9px 0 12px; }
@@ -76,8 +76,16 @@
     .category-controls { margin-top: 13px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .category-controls input { border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--text); padding: 9px 11px; width: min(100%,310px); font-size: 13px; }
     .category-controls input:focus { border-color: var(--accent); outline: 0; }
-    .cat-create { color: var(--accent); font-size: 12px; }
     .hidden { display: none !important; }
+    .sync-label { font: 11px Consolas,Monaco,monospace; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; margin-right: 12px; }
+    .sync-label::before { content: ""; display: inline-block; width: 6px; height: 6px; background: #c79752; border-radius: 50%; }
+    .sync-label.live::before { background: #57d3ac; }
+    .sync-label.problem::before { background: #e18a87; }
+    .status-box { padding: 17px 19px; margin-bottom: 19px; border: 1px solid var(--line-soft); border-left: 3px solid var(--accent); background: var(--surface); border-radius: 4px; color: var(--secondary); font-size: 13px; }
+    .status-box strong { color: var(--text); font-weight: 700; }
+    .status-box code { color: var(--accent); font: 12px Consolas,monospace; }
+    .signin-error { margin: 0; color: #f1aaa7; font-size: 12px; }
+
     .results { padding-top: 23px; min-height: 300px; }
     .result-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 25px; }
     .result-title { font-size: 18px; font-weight: 750; margin: 0; letter-spacing: -.02em; }
@@ -108,10 +116,8 @@
     .empty-symbol { color: var(--accent); font: bold 32px Consolas,monospace; letter-spacing: -5px; margin: 0 5px 10px 0; }
     .empty h3 { font-size: 17px; margin: 0 0 7px; }
     .empty p { margin: 0 auto 19px; max-width: 390px; color: var(--muted); font-size: 13px; }
-    .footer { margin: 54px 0 22px; border-top: 1px solid var(--line); padding: 18px 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 12px Consolas,Monaco,monospace; }
+    .footer { margin: 54px 0 22px; border-top: 1px solid var(--line); padding: 18px 0; color: var(--muted); font: 12px Consolas,Monaco,monospace; }
     .footer strong { color: var(--accent); font-weight: 500; }
-    .storage-dot { display: inline-block; height: 7px; width: 7px; margin-right: 7px; background: var(--accent); border-radius: 50%; }
-    .storage-dot.error { background: #f5b1a8; }
     dialog { color: var(--text); background: var(--bg); border: 1px solid #557184; border-radius: 7px; width: min(100% - 24px, 610px); max-height: min(90vh,850px); padding: 0; box-shadow: 0 30px 90px rgba(0,0,0,.55); }
     dialog::backdrop { background: rgba(6,17,24,.78); backdrop-filter: blur(3px); }
     .dialog-top { padding: 20px 23px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
@@ -134,6 +140,7 @@
       .topbar { align-items: flex-start; flex-direction: column; padding-top: 23px; }
       .top-actions { justify-content: flex-start; }
       .intro { padding: 23px 0; }
+      .intro p { white-space: normal; }
       .category-controls input { flex: 1 1 180px; }
       .form-row { grid-template-columns: 1fr; }
       dialog { max-height: 94vh; }
@@ -152,8 +159,6 @@
     <symbol id="ico-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
     <symbol id="ico-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l4.5-1 11-11a2.12 2.12 0 0 0-3-3l-11 11L4 20z"/></symbol>
     <symbol id="ico-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
-    <symbol id="ico-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
-    <symbol id="ico-upload" viewBox="0 0 24 24"><path d="M12 17V4M7 9l5-5 5 5M4 17v4h16v-4"/></symbol>
     <symbol id="ico-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
     <symbol id="ico-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
   </svg>
@@ -164,17 +169,16 @@
         <span><span class="brand-name">Beacon<em>Search</em></span><span class="brand-under">SPL / SEARCH REFERENCE</span></span>
       </a>
       <div class="top-actions">
-        <button class="btn" id="export-button" title="Download a JSON backup"><svg><use href="#ico-download"/></svg> Backup</button>
-        <button class="btn" id="import-button" title="Import and merge a JSON backup"><svg><use href="#ico-upload"/></svg> Restore</button>
+        <button class="btn small subtle hidden" type="button" id="signout" title="Sign out" aria-label="Sign out">Sign out</button>
         <button class="btn primary" id="new-search"><svg><use href="#ico-plus"/></svg> Add search</button>
       </div>
     </header>
     <section class="intro" aria-label="Introduction">
       <div class="eyebrow"><span class="dot"></span> CURATED QUERY LIBRARY</div>
-      <p>A lightweight reference for reusable SPL searches. Select a letter, browse investigations, and copy the query you need.</p>
+      <p>Dont Worry Analyst! I Got You (; Everything You Need to Investigate</p>
     </section>
     <section aria-labelledby="letters-heading">
-      <div class="section-top"><h2 class="section-label" id="letters-heading">Letters</h2><span class="subtext" id="letter-total"></span></div>
+      <div class="section-top"><h2 class="section-label" id="letters-heading">Letters</h2><span><span class="sync-label" id="sync-label">Connecting</span><span class="subtext" id="letter-total"></span></span></div>
       <nav class="letters" id="letter-list" aria-label="Letters"></nav>
     </section>
     <section class="filter-section" aria-label="Search and filters">
@@ -189,22 +193,17 @@
         <div class="filters" id="category-list" aria-label="Investigation filters"></div>
         <div class="category-controls">
           <input id="category-input" type="text" maxlength="48" autocomplete="off" placeholder="Type investigation..." aria-label="Type investigation">
-          <button id="create-category" class="btn small hidden" type="button"><svg><use href="#ico-plus"/></svg><span id="create-category-text">Add</span></button>
-          <button id="clear-category" class="btn small subtle hidden" type="button">Clear</button>
         </div>
       </div>
     </section>
     <section class="results" aria-labelledby="results-heading">
+      <div id="connection-message" class="status-box hidden" role="status"></div>
       <div class="result-head">
         <div><h2 class="result-title" id="results-heading">Saved searches <strong id="result-letter">D</strong></h2><p class="result-sub" id="result-desc"></p></div>
-        <button class="btn small" id="add-inline"><svg><use href="#ico-plus"/></svg> Add search</button>
       </div>
       <div id="result-groups"></div>
     </section>
-    <footer class="footer">
-      <span><strong>BeaconSearch</strong> · SPL · <span id="total-searches">0</span> saved</span>
-      <span><span class="storage-dot" id="storage-dot"></span><span id="storage-status">Connecting to local storage...</span> · <span title="Export backups to keep an additional copy">Backups recommended</span></span>
-    </footer>
+    <footer class="footer"><strong>BeaconSearch</strong> · Copyright © 2026</footer>
   </main>
   <dialog id="search-dialog" aria-labelledby="search-dialog-title">
     <form id="search-form">
@@ -232,413 +231,373 @@
       <div class="dialog-actions"><button type="button" class="btn" data-close="letter-dialog">Cancel</button><button type="submit" class="btn primary">Add</button></div>
     </form>
   </dialog>
-  <input type="file" id="restore-file" accept="application/json,.json" class="hidden">
+  <dialog id="login-dialog" aria-labelledby="login-dialog-title">
+    <form id="login-form">
+      <div class="dialog-top"><h2 id="login-dialog-title">Edit access</h2><button type="button" class="icon-btn" data-close="login-dialog" aria-label="Close"><svg><use href="#ico-x"/></svg></button></div>
+      <div class="dialog-body">
+        <div class="form-group"><label for="login-email">Email</label><input id="login-email" type="email" autocomplete="username" required></div>
+        <div class="form-group"><label for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" required></div>
+        <p class="signin-error hidden" id="login-error" role="alert"></p>
+      </div>
+      <div class="dialog-actions"><button type="button" class="btn" data-close="login-dialog">Cancel</button><button type="submit" class="btn primary" id="login-submit">Sign in</button></div>
+    </form>
+  </dialog>
   <div id="toast" class="off" aria-live="polite" role="status"></div>
-  <script>
-    (() => {
-      'use strict';
-      const $ = (id) => document.getElementById(id);
-      const DEFAULT_CATEGORIES = ['IP','Host','Username','Other'];
-      const DB_NAME = 'BeaconSearchVault';
-      const STORE_NAME = 'snapshots';
-      const STORE_KEY = 'main';
-      const icons = (name) => `<svg aria-hidden="true"><use href="#ico-${name}"></use></svg>`;
-      const now = () => new Date().toISOString();
-      const uid = () => (globalThis.crypto?.randomUUID?.() || `s-${Date.now()}-${Math.random().toString(36).slice(2)}`);
-      const canonLetter = (v) => /^[A-Z]$/.test(String(v).trim().toUpperCase()) ? String(v).trim().toUpperCase() : null;
-      const escapeHtml = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-      const scope = (letter) => `index=*${letter}*`;
-      function scopeSPL(raw,letter) {
-        const index = scope(letter);
-        let result = String(raw || '').replace(/\r\n?/g,'\n').trim();
-        if (!result) return index;
-        // Replace indexes even in pasted full queries, rather than keeping an identifying index name.
-        const inIndex = /\bindex\s+IN\s*\([^)]*\)/gi;
-        const equalIndex = /\bindex\s*=\s*(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s|,\])}]+)/gi;
-        const containsIndex = inIndex.test(result) || equalIndex.test(result);
-        result = result.replace(inIndex,index).replace(equalIndex,index);
-        if (!containsIndex) result = `${index}\n${result}`;
-        return result;
+  <script type="module">
+    // ONE-TIME SETUP: paste the web app config from your Firebase project here.
+    // These Firebase identifiers are public configuration, not private secrets.
+    const FIREBASE_CONFIG = {
+      apiKey: "",
+      authDomain: "",
+      databaseURL: "",
+      projectId: "",
+      appId: ""
+    };
+    // Copy the UID of the editor account you create under Firebase Authentication.
+    // The matching UID MUST also be set in the database Security Rules.
+    const EDITOR_UID = "";
+
+    const $ = id => document.getElementById(id);
+    const BASE = "beaconsearch/v2";
+    const DEFAULT_LETTERS = ["D", "M", "W"];
+    const DEFAULT_CATEGORIES = ["IP", "Host", "Username", "Other"];
+    const icons = name => `<svg aria-hidden="true"><use href="#ico-${name}"></use></svg>`;
+    const uid = () => (crypto.randomUUID?.() || `s-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    const canonLetter = x => /^[A-Z]$/.test(String(x).trim().toUpperCase()) ? String(x).trim().toUpperCase() : null;
+    const escapeHtml = x => String(x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const scope = letter => `index=*${letter}*`;
+    function scopeSPL(raw, letter) {
+      const index = scope(letter);
+      let spl = String(raw || "").replace(/\r\n?/g, "\n").trim();
+      if (!spl) return index;
+      const inIndex = /\bindex\s+IN\s*\([^)]*\)/gi;
+      const equalIndex = /\bindex\s*=\s*(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s|,\])}]+)/gi;
+      const hadIndex = /\bindex\s*(?:=|IN\s*\()/i.test(spl);
+      spl = spl.replace(inIndex, index).replace(equalIndex, index);
+      // A consistent first clause is required. This prevents leaking full index names.
+      if (!spl.startsWith(index)) spl = `${index}\n${spl}`;
+      return spl;
+    }
+    const key = (s) => String(s).trim().toLowerCase();
+    let data = {letters:[...DEFAULT_LETTERS], categories:{}, searches:[]};
+    let selectedLetter = "D", selectedCategory = "All", query = "", categoryQuery = "";
+    let editId = null, editRev = null, pendingAction = null, ready = false, connected = false;
+    let auth = null, db = null, firebase = null, toastTimer = null, loadError = "";
+
+    function toast(message) {
+      const el = $("toast"); el.textContent = message; el.classList.remove("off");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.add("off"), 3300);
+    }
+    function isEditor() { return !!(auth?.currentUser && EDITOR_UID && auth.currentUser.uid === EDITOR_UID); }
+    function canSave() {
+      if (!ready) { toast("Live library is not ready."); return false; }
+      if (!connected) { toast("Offline — reconnect before making changes."); return false; }
+      if (!isEditor()) { requestEdit("search"); return false; }
+      return true;
+    }
+    function validRecord(id, r) {
+      if (!r || typeof r !== "object") return null;
+      const letter = canonLetter(r.letter);
+      if (!letter || typeof r.spl !== "string" || !r.spl.trim()) return null;
+      const category = String(r.category || "Other").trim().slice(0, 48) || "Other";
+      const title = String(r.title || "Untitled").trim().slice(0, 120) || "Untitled";
+      const createdAt = Number(r.createdAt) || Date.now();
+      const updatedAt = Number(r.updatedAt) || Date.now();
+      return { id, letter, title, category, spl:scopeSPL(r.spl, letter), notes:String(r.notes || "").slice(0,1000), createdAt, updatedAt, rev:Number(r.rev)||1 };
+    }
+    function rebuildData(snapshot) {
+      const root = snapshot || {};
+      const fromLetters = Object.keys(root.letters || {}).filter(x => canonLetter(x) === x && root.letters[x] === true);
+      const searches = Object.entries(root.searches || {}).map(([id,record]) => validRecord(id,record)).filter(Boolean);
+      const letters = [...new Set([...DEFAULT_LETTERS, ...fromLetters, ...searches.map(x => x.letter)])];
+      const categories = {};
+      for (const letter of letters) {
+        const all = [...DEFAULT_CATEGORIES,...searches.filter(x => x.letter === letter).map(x => x.category)];
+        categories[letter] = [...new Map(all.map(x => [key(x),x])).values()];
       }
-      function initialData(){
-        const stamp = now();
-        const demo = (letter,category,title,code,notes='') => ({id:uid(),letter,category,title,spl:scopeSPL(code,letter),notes,createdAt:stamp,updatedAt:stamp});
-        return {
-          version:1, letters:['D','M','W'],
-          categories:{D:[...DEFAULT_CATEGORIES],M:[...DEFAULT_CATEGORIES],W:[...DEFAULT_CATEGORIES]},
-          searches:[
-            demo('D','IP','IP activity overview','src_ip="1.2.3.4"\n| stats count by src_ip, dest_ip, action\n| sort - count'),
-            demo('D','Host','Host event overview','host="HOSTNAME"\n| stats count by host, sourcetype\n| sort - count'),
-            demo('D','Username','Username activity','user="USERNAME"\n| stats count by user, action\n| sort - count'),
-            demo('M','IP','IP connection summary','src_ip="1.2.3.4"\n| stats count by src_ip, dest_ip, dest_port, action'),
-            demo('W','Host','Host error review','host="HOSTNAME" (error OR failed)\n| stats count by host, source, sourcetype')
-          ]
-        };
+      data = {letters,categories,searches};
+      if (!data.letters.includes(selectedLetter)) selectedLetter = data.letters[0];
+      if (selectedCategory !== "All" && !(categories[selectedLetter]||[]).some(x => key(x) === key(selectedCategory))) selectedCategory = "All";
+      renderAll();
+    }
+    function renderConnection() {
+      const el = $("sync-label");
+      el.classList.toggle("live", connected && ready);
+      el.classList.toggle("problem", !connected && (ready || !!loadError));
+      el.textContent = connected && ready ? "Live" : loadError ? "Unavailable" : ready ? "Offline" : "Connecting";
+      const msg = $("connection-message");
+      if (loadError) {
+        msg.classList.remove("hidden");
+        msg.innerHTML = `<strong>${escapeHtml(loadError)}</strong> Your saved searches are not being loaded. Check the Firebase configuration, HTTPS hosting and database rules.`;
+      } else if (!ready && !configured()) {
+        msg.classList.remove("hidden");
+        msg.innerHTML = `<strong>Connect BeaconSearch</strong> — To activate live sharing, fill in <code>FIREBASE_CONFIG</code> and <code>EDITOR_UID</code> inside this HTML file, configure the supplied database rules, and publish this same file on an HTTPS website. No example searches have been inserted.`;
+      } else if (ready && !connected) {
+        msg.classList.remove("hidden");
+        msg.innerHTML = `<strong>Connection lost.</strong> Existing searches may be out of date. Editing is paused until the connection returns.`;
+      } else {
+        msg.classList.add("hidden"); msg.textContent = "";
       }
-      function sanitizeData(value){
-        const clean = {version:1,letters:[],categories:{},searches:[]};
-        if(!value || typeof value !== 'object') throw new Error('Invalid backup format');
-        for(const v of Array.isArray(value.letters) ? value.letters : []) {
-          const letter=canonLetter(v); if(letter && !clean.letters.includes(letter)) clean.letters.push(letter);
-        }
-        const catSrc=value.categories && typeof value.categories==='object' ? value.categories : {};
-        for(const [key, vals] of Object.entries(catSrc)){
-          const letter=canonLetter(key); if(!letter) continue;
-          if(!clean.letters.includes(letter)) clean.letters.push(letter);
-          clean.categories[letter]=uniqueCategories([...DEFAULT_CATEGORIES,...(Array.isArray(vals) ? vals : [])]);
-        }
-        const items=Array.isArray(value.searches) ? value.searches.slice(0,20000) : [];
-        for(const entry of items){
-          if(!entry || typeof entry!=='object') continue;
-          const letter=canonLetter(entry.letter); if(!letter) continue;
-          if(!clean.letters.includes(letter)) clean.letters.push(letter);
-          const category=String(entry.category||'Other').trim().slice(0,48) || 'Other';
-          const title=String(entry.title||'Untitled').trim().slice(0,120) || 'Untitled';
-          const code=String(entry.spl||entry.code||'').slice(0,150000);
-          const notes=String(entry.notes||'').slice(0,1000);
-          if(!code.trim()) continue;
-          const id=String(entry.id||uid()).slice(0,100);
-          const date=(v)=> (typeof v==='string' && !Number.isNaN(Date.parse(v))) ? v : now();
-          clean.searches.push({id,letter,category,title,spl:scopeSPL(code,letter),notes,createdAt:date(entry.createdAt),updatedAt:date(entry.updatedAt)});
-          clean.categories[letter]=uniqueCategories([...(clean.categories[letter]||DEFAULT_CATEGORIES),category]);
-        }
-        if(!clean.letters.length) clean.letters=['D','M','W'];
-        for(const letter of clean.letters) clean.categories[letter]=uniqueCategories([...(clean.categories[letter]||DEFAULT_CATEGORIES)]);
-        return clean;
+      $("signout").classList.toggle("hidden", !isEditor());
+    }
+    function configured() { return ["apiKey","authDomain","databaseURL","projectId","appId"].every(x => Boolean(FIREBASE_CONFIG[x])) && Boolean(EDITOR_UID.trim()); }
+    function updateHash() {
+      const route = `${selectedLetter}${selectedCategory === "All" ? "" : "/" + encodeURIComponent(selectedCategory)}`;
+      if (location.hash.slice(1) !== route) history.replaceState(null,"",`#${route}`);
+    }
+    function renderLetters() {
+      const dest = $("letter-list"); dest.replaceChildren();
+      for (const letter of data.letters) {
+        const btn = document.createElement("button"); btn.type="button"; btn.className="letter"; btn.textContent=letter;
+        btn.setAttribute("aria-label", letter); btn.setAttribute("aria-pressed",String(selectedLetter === letter));
+        btn.onclick=()=>{selectedLetter=letter;selectedCategory="All";categoryQuery="";$("category-input").value="";renderAll();updateHash();};
+        dest.append(btn);
       }
-      function uniqueCategories(values){
-        const used=new Set(), result=[];
-        for(const cat of values) {
-          if(typeof cat!=='string') continue;
-          const value=cat.trim().slice(0,48);
-          if(!value || used.has(value.toLowerCase()) || value.toLowerCase()==='all') continue;
-          used.add(value.toLowerCase()); result.push(value);
-        }
-        return result;
+      const plus = document.createElement("button"); plus.type="button"; plus.className="letter add";
+      plus.title="Add letter"; plus.setAttribute("aria-label","Add letter"); plus.innerHTML=icons("plus");
+      plus.onclick=()=>requestEdit("letter"); dest.append(plus);
+      $("letter-total").textContent=`${data.letters.length} total`;
+    }
+    function renderCategories() {
+      const dest = $("category-list"); dest.replaceChildren();
+      const cats = ["All", ...(data.categories[selectedLetter] || DEFAULT_CATEGORIES)];
+      for (const cat of cats) {
+        if (cat!=="All" && categoryQuery && !key(cat).includes(key(categoryQuery))) continue;
+        const btn=document.createElement("button"); btn.type="button"; btn.className="tag"; btn.textContent=cat;
+        btn.setAttribute("aria-pressed",String(selectedCategory===cat));
+        btn.onclick=()=>{selectedCategory=cat;categoryQuery="";$("category-input").value="";renderCategories();renderResults();updateHash();};
+        dest.append(btn);
       }
-      let data = initialData();
-      let selectedLetter='D', selectedCategory='All', query='', categoryQuery='', editId=null;
-      let db=null,storageMode='pending',writeQueue=Promise.resolve(),writeGeneration=0;
-      let toastTimer=null;
-      function toast(message){
-        const el=$('toast');el.textContent=message;el.classList.remove('off');
-        clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('off'),3100);
+    }
+    function filteredEntries() {
+      const search = key(query), cat = key(categoryQuery);
+      return data.searches.filter(x => x.letter === selectedLetter &&
+        (selectedCategory === "All" || key(x.category) === key(selectedCategory)) &&
+        (!cat || key(x.category).includes(cat)) &&
+        (!search || [x.title,x.category,x.spl,x.notes].some(v=>key(v).includes(search))));
+    }
+    function codeToHTML(code) {
+      const token = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:index|source|sourcetype|host|src_ip|dest_ip|dest_port|user|stats|count|by|where|table|dedup|eval|search|sort|head|bin|timechart|earliest|latest|rex|spath|values|dc|as|AND|OR|NOT)\b|\|)/gi;
+      let out = "", cur = 0, match;
+      while ((match = token.exec(code))) {
+        out += escapeHtml(code.slice(cur,match.index));
+        out += `<span class="${match[0]==="|"?"syn-pipe":/^["']/.test(match[0])?"syn-str":"syn-key"}">${escapeHtml(match[0])}</span>`;
+        cur = match.index + match[0].length;
       }
-      function storageStatus(msg,failed=false){
-        $('storage-status').textContent=msg;
-        $('storage-dot').classList.toggle('error',failed);
+      return out + escapeHtml(code.slice(cur));
+    }
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+      const area = document.createElement("textarea"); area.value=text; area.style.position="fixed";area.style.left="-9999px";
+      document.body.append(area); area.select(); const ok=document.execCommand("copy");area.remove();if(!ok)throw Error("Copy blocked");
+    }
+    function renderEntry(x) {
+      const article=document.createElement("article");article.className="entry";
+      const code=scopeSPL(x.spl,x.letter);
+      const dt=new Date(x.updatedAt).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+      article.innerHTML=`<div class="entry-title"><h4>${escapeHtml(x.title)}</h4>
+        <div class="entry-actions ${isEditor()?"":"hidden"}"><button type="button" class="icon-btn edit" title="Edit search">${icons("edit")} Edit</button>
+        <button type="button" class="icon-btn delete" title="Delete search">${icons("trash")}</button></div></div>
+        ${x.notes?`<p class="entry-notes">${escapeHtml(x.notes)}</p>`:""}
+        <div class="code-panel"><div class="code-toolbar"><button type="button" class="copy-btn">${icons("copy")} <span>Copy</span></button><span class="code-lang">SPL</span></div><pre><code>${codeToHTML(code)}</code></pre></div>
+        <div class="entry-date">Updated ${escapeHtml(dt)}</div>`;
+      article.querySelector(".edit").onclick=()=>openSearch(x.id);
+      article.querySelector(".delete").onclick=()=>deleteEntry(x);
+      article.querySelector(".copy-btn").onclick=async ev=>{
+        const btn=ev.currentTarget;
+        try {await copyText(code);btn.innerHTML=`${icons("check")} <span>Copied</span>`;
+          setTimeout(()=>{if(btn.isConnected)btn.innerHTML=`${icons("copy")} <span>Copy</span>`;},1700);
+        } catch(e) { console.error(e);toast("Could not copy. Select the search and copy manually."); }
+      };
+      return article;
+    }
+    function renderResults() {
+      $("result-letter").textContent=selectedLetter;
+      const matches=filteredEntries();
+      const total=data.searches.filter(x=>x.letter===selectedLetter).length;
+      $("result-desc").textContent=`${matches.length} shown · ${total} saved under ${selectedLetter}`;
+      const dest=$("result-groups");dest.replaceChildren();
+      if(!ready){
+        // Never show locally seeded or stale example searches.
+        dest.innerHTML='<div class="empty"><div class="empty-symbol">&gt;_</div><h3>Awaiting live library</h3><p>Searches will appear when the online connection is configured.</p></div>';
+        return;
       }
-      function openDB(){
-        return new Promise((resolve,reject)=>{
-          if(!('indexedDB' in globalThis)) return reject(new Error('IndexedDB unsupported'));
-          const request=indexedDB.open(DB_NAME,1);
-          request.onupgradeneeded=()=>{
-            const database=request.result;
-            if(!database.objectStoreNames.contains(STORE_NAME)) database.createObjectStore(STORE_NAME);
-          };
-          request.onsuccess=()=>resolve(request.result);
-          request.onerror=()=>reject(request.error||new Error('Unable to open storage'));
-          request.onblocked=()=>reject(new Error('Storage blocked'));
-        });
+      if(!matches.length){
+        const filtered=!!(query || categoryQuery || selectedCategory!=="All");
+        dest.innerHTML=`<div class="empty"><div class="empty-symbol">&gt;_</div><h3>${filtered?"No matching searches":"Nothing saved here yet"}</h3><p>${filtered?"Try another search or investigation.":"Use Add search at the top to save your first SPL search."}</p></div>`;
+        return;
       }
-      function idbGet(){return new Promise((resolve,reject)=>{
-        const tx=db.transaction(STORE_NAME,'readonly');
-        const req=tx.objectStore(STORE_NAME).get(STORE_KEY);
-        req.onsuccess=()=>resolve(req.result ?? null);
-        req.onerror=()=>reject(req.error);
-      });}
-      function idbPut(value){return new Promise((resolve,reject)=>{
-        const tx=db.transaction(STORE_NAME,'readwrite');
-        tx.objectStore(STORE_NAME).put(value,STORE_KEY);
-        tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);
-        tx.onabort=()=>reject(tx.error||new Error('Save interrupted'));
-      });}
-      async function initStorage(){
-        try {
-          db=await openDB();storageMode='idb';
-          const stored=await idbGet();
-          if(stored){data=sanitizeData(stored);}else{await idbPut(data);}
-          storageStatus('Saved in this browser');
-        } catch(err){
-          console.warn('Browser storage fallback:',err);
-          try{
-            const raw=localStorage.getItem(DB_NAME);
-            if(raw)data=sanitizeData(JSON.parse(raw));
-            else localStorage.setItem(DB_NAME,JSON.stringify(data));
-            storageMode='local';storageStatus('Local browser storage');
-          }catch(err2){
-            console.error('Storage unavailable:',err2);
-            storageMode='none';storageStatus('Storage unavailable — export backup',true);
-            toast('Storage is unavailable. Back up your work before closing.');
-          }
-        }
-        const h=decodeURIComponent(location.hash.slice(1)).split('/');
-        if(h[0] && data.letters.includes(h[0].toUpperCase())) {
-          selectedLetter=h[0].toUpperCase();
-          const category=data.categories[selectedLetter].find(c=>c.toLowerCase()===(h[1]||'').toLowerCase());
-          if(category) selectedCategory=category;
-        }
-        renderAll();
+      for(const cat of data.categories[selectedLetter] || DEFAULT_CATEGORIES){
+        const entries=matches.filter(x=>key(x.category)===key(cat)).sort((a,b)=>a.title.localeCompare(b.title));
+        if(!entries.length) continue;
+        const group=document.createElement("div");group.className="group";
+        const head=document.createElement("div");head.className="group-heading";
+        const title=document.createElement("h3");title.textContent=cat;
+        const num=document.createElement("span");num.className="group-num";num.textContent=String(entries.length).padStart(2,"0");
+        head.append(title,num);group.append(head);
+        for(const x of entries) group.append(renderEntry(x));
+        dest.append(group);
       }
-      function persist(){
-        const snapshot=JSON.parse(JSON.stringify(data));
-        const version=++writeGeneration;
-        storageStatus('Saving...');
-        writeQueue=writeQueue.catch(()=>{}).then(async()=>{
-          if(storageMode==='idb') await idbPut(snapshot);
-          else if(storageMode==='local') localStorage.setItem(DB_NAME,JSON.stringify(snapshot));
-          else throw new Error('No persistent storage available');
-          if(version===writeGeneration) storageStatus(storageMode==='idb'?'Saved in this browser':'Local browser storage');
-        }).catch(err=>{
-          console.error('Save failed:',err);
-          storageStatus('Save failed — export backup',true);
-          toast('Local save failed. Export a backup now.');
-        });
-        return writeQueue;
+    }
+    function renderAll() {renderLetters();renderCategories();renderResults();renderConnection();}
+    function updateIndexPreview() {$("index-preview").textContent=scope($("entry-letter").value||selectedLetter);}
+    function updateCategorySuggestions() {
+      const dest=$("category-suggestions");dest.replaceChildren();
+      for(const cat of data.categories[$("entry-letter").value] || DEFAULT_CATEGORIES){
+        const opt=document.createElement("option");opt.value=cat;dest.append(opt);
       }
-      function updateHash(){
-        const value=`${selectedLetter}${selectedCategory==='All'?'':`/${encodeURIComponent(selectedCategory)}`}`;
-        if(location.hash.slice(1)!==value) history.replaceState(null,'',`#${value}`);
-      }
-      function renderLetters(){
-        $('letter-list').replaceChildren();
-        for(const letter of data.letters){
-          const btn=document.createElement('button');btn.type='button';btn.className='letter';btn.textContent=letter;
-          btn.setAttribute('aria-label',letter);btn.setAttribute('aria-pressed',String(selectedLetter===letter));
-          btn.addEventListener('click',()=>{
-            selectedLetter=letter;selectedCategory='All';categoryQuery='';$('category-input').value='';
-            renderAll();updateHash();
-          });$('letter-list').append(btn);
-        }
-        const add=document.createElement('button');add.type='button';add.className='letter add';add.title='Add letter';add.setAttribute('aria-label','Add letter');add.innerHTML=icons('plus');
-        add.addEventListener('click',()=>{$('new-letter-input').value='';$('letter-dialog').showModal();$('new-letter-input').focus();});
-        $('letter-list').append(add);
-        $('letter-total').textContent=`${data.letters.length} total`;
-      }
-      function renderCategories(){
-        const container=$('category-list');container.replaceChildren();
-        const cats=['All',...(data.categories[selectedLetter]||DEFAULT_CATEGORIES)];
-        const matches=cats.filter(c=>c==='All'||!categoryQuery||c.toLowerCase().includes(categoryQuery.toLowerCase()));
-        for(const cat of matches){
-          const btn=document.createElement('button');btn.type='button';btn.className='tag';btn.textContent=cat;
-          btn.setAttribute('aria-pressed',String(selectedCategory===cat));
-          btn.addEventListener('click',()=>{
-            selectedCategory=cat;categoryQuery='';$('category-input').value='';renderCategories();renderResults();updateHash();
-          });container.append(btn);
-        }
-        if(!cats.some(c=>c!=='All'&&(!categoryQuery||c.toLowerCase().includes(categoryQuery.toLowerCase())))){
-          const info=document.createElement('span');info.className='subtext';info.textContent='No matching investigation';container.append(info);
-        }
-        const trimmed=categoryQuery.trim();
-        const exact=cats.some(c=>c.toLowerCase()===trimmed.toLowerCase());
-        $('create-category').classList.toggle('hidden',!trimmed||exact);
-        $('create-category-text').textContent=trimmed?`Add “${trimmed}”`:'Add';
-        $('clear-category').classList.toggle('hidden',!trimmed);
-      }
-      function filteredEntries(){
-        const general=query.toLowerCase().trim(), byCategory=categoryQuery.toLowerCase().trim();
-        return data.searches.filter(s=>s.letter===selectedLetter &&
-          (selectedCategory==='All'||s.category.toLowerCase()===selectedCategory.toLowerCase()) &&
-          (!byCategory||s.category.toLowerCase().includes(byCategory)) &&
-          (!general||[s.title,s.category,s.spl,s.notes].some(v=>v.toLowerCase().includes(general)))
-        );
-      }
-      function codeToHTML(code){
-        const token=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:index|source|sourcetype|host|src_ip|dest_ip|dest_port|user|stats|count|by|where|table|dedup|eval|search|sort|head|bin|timechart|earliest|latest|rex|spath|values|dc|as|AND|OR|NOT)\b|\|)/gi;
-        let out='',cursor=0,match;
-        while((match=token.exec(code))){
-          out+=escapeHtml(code.slice(cursor,match.index));
-          const part=match[0],kind=part==='|'?'syn-pipe':/^["']/.test(part)?'syn-str':'syn-key';
-          out+=`<span class="${kind}">${escapeHtml(part)}</span>`;cursor=match.index+part.length;
-        }
-        return out+escapeHtml(code.slice(cursor));
-      }
-      function makeEntry(entry){
-        const article=document.createElement('article');article.className='entry';
-        const safeSPL=scopeSPL(entry.spl,entry.letter);
-        const date=new Date(entry.updatedAt).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
-        article.innerHTML=`
-          <div class="entry-title"><h4>${escapeHtml(entry.title)}</h4>
-            <div class="entry-actions"><button type="button" class="icon-btn edit" title="Edit search" aria-label="Edit ${escapeHtml(entry.title)}">${icons('edit')} Edit</button>
-            <button type="button" class="icon-btn delete" title="Delete search" aria-label="Delete ${escapeHtml(entry.title)}">${icons('trash')}</button></div>
-          </div>
-          ${entry.notes ? `<p class="entry-notes">${escapeHtml(entry.notes)}</p>` : ''}
-          <div class="code-panel"><div class="code-toolbar"><button type="button" class="copy-btn">${icons('copy')} <span>Copy</span></button><span class="code-lang">SPL</span></div><pre><code>${codeToHTML(safeSPL)}</code></pre></div>
-          <div class="entry-date">Updated ${escapeHtml(date)}</div>`;
-        article.querySelector('.edit').addEventListener('click',()=>openSearch(entry.id));
-        article.querySelector('.delete').addEventListener('click',()=>deleteEntry(entry.id));
-        article.querySelector('.copy-btn').addEventListener('click',async(ev)=>{
-          try{await copyText(safeSPL);const btn=ev.currentTarget;btn.innerHTML=`${icons('check')} <span>Copied</span>`;
-            setTimeout(()=>{if(btn.isConnected)btn.innerHTML=`${icons('copy')} <span>Copy</span>`;},1700);
-          }catch(error){console.error(error);toast('Copy failed. Select the code and copy manually.');}
-        });
-        return article;
-      }
-      async function copyText(text){
-        if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
-        const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';
-        document.body.append(area);area.focus();area.select();
-        const success=document.execCommand('copy');area.remove();if(!success) throw new Error('Copy blocked');
-      }
-      function renderResults(){
-        $('result-letter').textContent=selectedLetter;
-        const matches=filteredEntries();
-        const total=data.searches.filter(s=>s.letter===selectedLetter).length;
-        $('result-desc').textContent=`${matches.length} shown · ${total} saved under ${selectedLetter}`;
-        $('total-searches').textContent=String(data.searches.length);
-        const dest=$('result-groups');dest.replaceChildren();
-        if(!matches.length){
-          const empty=document.createElement('div');empty.className='empty';
-          const filtered=!!(query||categoryQuery||selectedCategory!=='All');
-          empty.innerHTML=`<div class="empty-symbol">&gt;_</div><h3>${filtered?'No matching searches':'Nothing saved here yet'}</h3>
-          <p>${filtered?'Try another search or investigation, or add a new search.':'Add your first SPL search. It will be saved locally under this letter.'}</p>
-          <button type="button" class="btn primary">${icons('plus')} Add search</button>`;
-          empty.querySelector('button').addEventListener('click',()=>openSearch());dest.append(empty);return;
-        }
-        const cats=data.categories[selectedLetter]||DEFAULT_CATEGORIES;
-        for(const cat of cats){
-          const items=matches.filter(s=>s.category.toLowerCase()===cat.toLowerCase());
-          if(!items.length)continue;
-          items.sort((a,b)=>a.title.localeCompare(b.title));
-          const group=document.createElement('div');group.className='group';
-          const h=document.createElement('div');h.className='group-heading';
-          const title=document.createElement('h3');title.textContent=cat;
-          const count=document.createElement('span');count.className='group-num';count.textContent=String(items.length).padStart(2,'0');
-          h.append(title,count);group.append(h);
-          for(const entry of items)group.append(makeEntry(entry));
-          dest.append(group);
-        }
-      }
-      function renderAll(){renderLetters();renderCategories();renderResults();}
-      function populateLetterSelect(letter){
-        const sel=$('entry-letter');sel.replaceChildren();
-        for(const l of data.letters){const opt=document.createElement('option');opt.value=l;opt.textContent=l;sel.append(opt);}
-        sel.value=letter;updateCategorySuggestions();updateScopePreview();
-      }
-      function updateCategorySuggestions(){
-        const dl=$('category-suggestions');dl.replaceChildren();
-        for(const cat of data.categories[$('entry-letter').value]||DEFAULT_CATEGORIES){
-          const op=document.createElement('option');op.value=cat;dl.append(op);
-        }
-      }
-      function updateScopePreview(){$('index-preview').textContent=scope($('entry-letter').value||selectedLetter);}
-      function openSearch(id=null){
-        editId=id;
-        const entry=id?data.searches.find(s=>s.id===id):null;
-        $('search-dialog-title').textContent=entry?'Edit search':'Add search';
-        $('entry-title').value=entry?.title||'';
-        populateLetterSelect(entry?.letter||selectedLetter);
-        $('entry-category').value=entry?.category||(selectedCategory!=='All'?selectedCategory:'IP');
-        $('entry-code').value=entry?.spl||'';
-        $('entry-notes').value=entry?.notes||'';
-        $('search-dialog').showModal();$('entry-title').focus();
-      }
-      function addCategory(raw,shouldSelect=true){
-        const category=raw.trim().slice(0,48);
-        if(!category||category.toLowerCase()==='all'){toast('Enter an investigation name.');return;}
-        const list=data.categories[selectedLetter];
-        const existing=list.find(c=>c.toLowerCase()===category.toLowerCase());
-        const chosen=existing||category;
-        if(!existing){list.push(chosen);persist();toast(`Added ${chosen}`);}
-        if(shouldSelect){selectedCategory=chosen;categoryQuery='';$('category-input').value='';}
-        renderCategories();renderResults();updateHash();
-      }
-      function deleteEntry(id){
-        const entry=data.searches.find(s=>s.id===id);if(!entry)return;
-        if(!confirm(`Delete “${entry.title}”? This cannot be undone unless you have a backup.`))return;
-        data.searches=data.searches.filter(s=>s.id!==id);
-        persist();renderResults();toast('Search deleted');
-      }
-      function exportJSON(){
-        const payload={app:'BeaconSearch',format:1,exportedAt:now(),...data};
-        const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement('a');a.href=url;a.download=`BeaconSearch-backup-${new Date().toISOString().slice(0,10)}.json`;
-        document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
-        toast('Backup downloaded');
-      }
-      async function importJSON(file){
-        if(!file)return;
-        if(file.size>12*1024*1024){toast('Backup is too large.');return;}
+    }
+    function openSearch(id=null) {
+      editId=id;
+      const entry=id?data.searches.find(x=>x.id===id):null;
+      if(id && !entry){toast("This search has been removed.");return;}
+      editRev=entry?.rev || null;
+      $("search-dialog-title").textContent=entry?"Edit search":"Add search";
+      $("entry-title").value=entry?.title || "";
+      const sel=$("entry-letter");sel.replaceChildren();
+      for(const letter of data.letters){const option=document.createElement("option");option.value=letter;option.textContent=letter;sel.append(option);}
+      sel.value=entry?.letter || selectedLetter;
+      // Typed investigation filters are NEVER stored just by typing.
+      $("entry-category").value=entry?.category || categoryQuery.trim() || (selectedCategory!=="All"?selectedCategory:"IP");
+      $("entry-code").value=entry?.spl || "";
+      $("entry-notes").value=entry?.notes || "";
+      updateCategorySuggestions();updateIndexPreview();
+      $("search-dialog").showModal();$("entry-title").focus();
+    }
+    function requestEdit(action) {
+      if(!ready){toast("Configure the live database before editing.");return;}
+      if(!connected){toast("Offline — editing is paused.");return;}
+      if(isEditor()) {if(action==="letter")openLetter();else openSearch();return;}
+      pendingAction=action;
+      $("login-error").classList.add("hidden");$("login-error").textContent="";
+      $("login-password").value="";
+      $("login-dialog").showModal();$("login-email").focus();
+    }
+    function openLetter(){$("new-letter-input").value="";$("letter-dialog").showModal();$("new-letter-input").focus();}
+    async function deleteEntry(entry) {
+      if(!canSave())return;
+      if(!confirm(`Delete “${entry.title}”? This removal will sync to all devices.`))return;
+      try{
+        const recordRef=firebase.ref(db,`${BASE}/searches/${entry.id}`);
+        const {committed}=await firebase.runTransaction(recordRef,current=>{
+          if(!current || Number(current.rev||1)!==entry.rev) return;
+          return null;
+        },{applyLocally:false});
+        if(!committed) {toast("Search changed elsewhere. Review the latest version.");return;}
+        toast("Search deleted everywhere");
+      } catch(e) {console.error(e);toast("Delete failed. Nothing was removed from the server.");}
+    }
+    function lockSubmit(form,locked){const btn=form.querySelector('button[type="submit"]');btn.disabled=locked;btn.style.opacity=locked?".6":"";}
+    function saveAuthError(error){console.error("BeaconSearch:",error);const raw=String(error?.code||"");toast(raw.includes("permission-denied")?"Access denied — check database rules and editor UID.":"Could not sync. No change was confirmed.");}
+    function bindEvents() {
+      $("new-search").onclick=()=>requestEdit("search");
+      $("global-search").addEventListener("input",e=>{query=e.target.value;renderResults();});
+      $("category-input").addEventListener("input",e=>{
+        categoryQuery=e.target.value;selectedCategory="All";renderCategories();renderResults();updateHash();
+      });
+      // Enter only filters. It NEVER creates a new investigation category.
+      $("category-input").addEventListener("keydown",e=>{if(e.key==="Enter")e.preventDefault();});
+      $("entry-letter").onchange=()=>{updateCategorySuggestions();updateIndexPreview();};
+      $("login-form").onsubmit=async e=>{
+        e.preventDefault();if(!auth || !connected)return;
+        const form=e.currentTarget;lockSubmit(form,true);
+        const err=$("login-error");err.textContent="";err.classList.add("hidden");
         try{
-          const parsed=JSON.parse(await file.text());
-          if(parsed.app && parsed.app!=='BeaconSearch') throw new Error('Not a BeaconSearch backup');
-          if(!Array.isArray(parsed.letters)||!Array.isArray(parsed.searches))throw new Error('Invalid backup contents');
-          const incoming=sanitizeData(parsed);
-          let added=0;
-          for(const letter of incoming.letters){
-            if(!data.letters.includes(letter)) data.letters.push(letter);
-            data.categories[letter]=uniqueCategories([...(data.categories[letter]||DEFAULT_CATEGORIES),...incoming.categories[letter]]);
+          const result=await firebase.signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value);
+          if(result.user.uid!==EDITOR_UID){await firebase.signOut(auth);throw new Error("This account does not have edit access.");}
+          $("login-dialog").close();$("login-password").value="";
+          renderAll();
+          if(pendingAction==="letter")openLetter();else if(pendingAction==="search")openSearch();
+          pendingAction=null;
+        }catch(error){err.textContent="Sign in failed. Check your account and edit permissions.";err.classList.remove("hidden");console.warn("Sign in error",error?.code||error?.message);}
+        finally{lockSubmit(form,false);}
+      };
+      $("signout").onclick=async()=>{
+        try{await firebase.signOut(auth);renderAll();toast("Signed out");}catch(e){saveAuthError(e);}
+      };
+      $("search-form").onsubmit=async e=>{
+        e.preventDefault();if(!canSave())return;
+        const form=e.currentTarget;
+        const title=$("entry-title").value.trim().slice(0,120);
+        const letter=canonLetter($("entry-letter").value);
+        const category=$("entry-category").value.trim().slice(0,48);
+        const raw=$("entry-code").value.trim();
+        const notes=$("entry-notes").value.trim().slice(0,1000);
+        if(!title||!letter||!category||!raw||key(category)==="all"){toast("Complete the title, letter, investigation and SPL fields.");return;}
+        if(raw.length>50000){toast("SPL is too long.");return;}
+        lockSubmit(form,true);
+        try{
+          const prior=editId?data.searches.find(x=>x.id===editId):null;
+          if(editId&&!prior){toast("This search no longer exists.");return;}
+          const record={letter,title,category,spl:scopeSPL(raw,letter),notes,createdAt:prior?.createdAt||Date.now(),updatedAt:Date.now(),rev:1};
+          if(prior){
+            // Compare revision to avoid silently overwriting changes from another browser.
+            const res=await firebase.runTransaction(firebase.ref(db,`${BASE}/searches/${prior.id}`),current=>{
+              if(!current || Number(current.rev||1)!==editRev)return;
+              return {...record,createdAt:Number(current.createdAt)||record.createdAt,rev:(Number(current.rev)||1)+1};
+            },{applyLocally:false});
+            if(!res.committed){toast("This search was changed elsewhere. Close and reopen it before editing.");return;}
+            if(!data.letters.includes(letter))await firebase.set(firebase.ref(db,`${BASE}/letters/${letter}`),true);
+          }else{
+            const id=uid();
+            await firebase.update(firebase.ref(db,BASE),{[`letters/${letter}`]:true,[`searches/${id}`]:record});
           }
-          const existing=new Map(data.searches.map(s=>[s.id,s]));
-          for(const entry of incoming.searches){
-            const prior=existing.get(entry.id);
-            if(prior && JSON.stringify(prior)===JSON.stringify(entry)) continue;
-            const next=prior?{...entry,id:uid()}:entry;
-            data.searches.push(next);existing.set(next.id,next);added++;
-          }
-          persist();renderAll();toast(`Restore complete · ${added} searches added`);
-        } catch(err){console.error(err);toast('Restore failed: '+err.message);}
-      }
-      function bindEvents(){
-        $('new-search').addEventListener('click',()=>openSearch());
-        $('add-inline').addEventListener('click',()=>openSearch());
-        $('export-button').addEventListener('click',exportJSON);
-        $('import-button').addEventListener('click',()=>$('restore-file').click());
-        $('restore-file').addEventListener('change',async e=>{await importJSON(e.target.files?.[0]);e.target.value='';});
-        $('global-search').addEventListener('input',e=>{query=e.target.value;renderResults();});
-        $('category-input').addEventListener('input',e=>{
-          categoryQuery=e.target.value;selectedCategory='All';renderCategories();renderResults();updateHash();
+          selectedLetter=letter;selectedCategory=category;categoryQuery="";query="";
+          $("category-input").value="";$("global-search").value="";
+          $("search-dialog").close();renderAll();updateHash();
+          toast(prior?"Search updated everywhere":"Search saved everywhere");
+        }catch(error){saveAuthError(error);}finally{lockSubmit(form,false);}
+      };
+      $("letter-form").onsubmit=async e=>{
+        e.preventDefault();if(!canSave())return;
+        const letter=canonLetter($("new-letter-input").value);
+        if(!letter){toast("Enter one letter (A–Z).");return;}
+        if(data.letters.includes(letter)){toast("This letter already exists.");return;}
+        const form=e.currentTarget;lockSubmit(form,true);
+        try{
+          await firebase.set(firebase.ref(db,`${BASE}/letters/${letter}`),true);
+          selectedLetter=letter;selectedCategory="All";categoryQuery="";$("category-input").value="";
+          $("letter-dialog").close();toast(`Added ${letter}`);updateHash();
+        }catch(error){saveAuthError(error);}finally{lockSubmit(form,false);}
+      };
+      document.querySelectorAll("[data-close]").forEach(btn=>btn.onclick=()=>$(btn.dataset.close).close());
+      document.addEventListener("keydown",e=>{
+        const editable=["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName);
+        if(!document.querySelector("dialog[open]")&&!editable&&(e.key==="/"||(e.key.toLowerCase()==="k"&&(e.ctrlKey||e.metaKey)))){
+          e.preventDefault();$("global-search").focus();
+        }
+      });
+      window.addEventListener("hashchange",()=>{
+        let decoded=[];try{decoded=decodeURIComponent(location.hash.slice(1)).split("/");}catch{return;}
+        const letter=canonLetter(decoded[0]);if(!letter||!data.letters.includes(letter))return;
+        selectedLetter=letter;
+        const cat=(data.categories[letter]||[]).find(c=>key(c)===key(decoded[1]||""));
+        selectedCategory=cat||"All";renderAll();
+      });
+    }
+    async function connectLive() {
+      if(!configured()){loadError="";ready=false;renderAll();return;}
+      try{
+        const BASESDK="https://www.gstatic.com/firebasejs/13.1.0/";
+        const [appLib,dbLib,authLib]=await Promise.all([
+          import(BASESDK+"firebase-app.js"),import(BASESDK+"firebase-database.js"),import(BASESDK+"firebase-auth.js")
+        ]);
+        firebase={...dbLib,...authLib};
+        const app=appLib.initializeApp(FIREBASE_CONFIG);
+        db=dbLib.getDatabase(app);auth=authLib.getAuth(app);
+        authLib.onAuthStateChanged(auth,()=>renderAll(),error=>{console.error(error);});
+        dbLib.onValue(dbLib.ref(db,".info/connected"),s=>{connected=s.val()===true;renderConnection();});
+        dbLib.onValue(dbLib.ref(db,BASE),s=>{
+          ready=true;loadError="";rebuildData(s.val());renderConnection();
+        },error=>{
+          console.error("Live read error",error);
+          ready=false;loadError="Live library could not be loaded.";renderAll();
         });
-        $('category-input').addEventListener('keydown',e=>{
-          if(e.key==='Enter'){e.preventDefault();if(categoryQuery.trim()){
-            const match=data.categories[selectedLetter].find(c=>c.toLowerCase()===categoryQuery.trim().toLowerCase());
-            if(match)addCategory(match);else addCategory(categoryQuery);
-          }}
-        });
-        $('create-category').addEventListener('click',()=>addCategory(categoryQuery));
-        $('clear-category').addEventListener('click',()=>{categoryQuery='';$('category-input').value='';renderCategories();renderResults();});
-        $('entry-letter').addEventListener('change',()=>{updateCategorySuggestions();updateScopePreview();});
-        $('search-form').addEventListener('submit',e=>{
-          e.preventDefault();
-          const title=$('entry-title').value.trim();
-          const letter=canonLetter($('entry-letter').value);
-          const category=$('entry-category').value.trim();
-          const raw=$('entry-code').value.trim();
-          if(!title||!letter||!category||!raw){toast('Complete the required fields.');return;}
-          if(category.toLowerCase()==='all'){toast('Choose an investigation other than All.');return;}
-          const existing=data.categories[letter].find(c=>c.toLowerCase()===category.toLowerCase());
-          const chosen=existing||category;
-          if(!existing)data.categories[letter].push(chosen);
-          const prior=editId?data.searches.find(s=>s.id===editId):null;
-          const item={id:prior?.id||uid(),letter,category:chosen,title,spl:scopeSPL(raw,letter),notes:$('entry-notes').value.trim(),createdAt:prior?.createdAt||now(),updatedAt:now()};
-          if(prior)Object.assign(prior,item);else data.searches.push(item);
-          selectedLetter=letter;selectedCategory=chosen;categoryQuery='';query='';$('global-search').value='';$('category-input').value='';
-          $('search-dialog').close();persist();renderAll();updateHash();toast(prior?'Search updated':'Search saved');
-          // Ask the browser to protect site data where supported; a backup is still recommended.
-          if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{});
-        });
-        $('letter-form').addEventListener('submit',e=>{
-          e.preventDefault();
-          const letter=canonLetter($('new-letter-input').value);
-          if(!letter){toast('Enter a single letter (A–Z).');return;}
-          if(data.letters.includes(letter)){toast('That letter already exists.');return;}
-          data.letters.push(letter);data.categories[letter]=[...DEFAULT_CATEGORIES];
-          selectedLetter=letter;selectedCategory='All';categoryQuery='';$('category-input').value='';
-          $('letter-dialog').close();persist();renderAll();updateHash();toast(`Added ${letter}`);
-        });
-        document.querySelectorAll('[data-close]').forEach(btn=>btn.addEventListener('click',()=>$(btn.dataset.close).close()));
-        document.addEventListener('keydown',e=>{
-          const inEditor=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
-          const dialogOpen=!!document.querySelector('dialog[open]');
-          if(!dialogOpen&&!inEditor&&(e.key==='/'||(e.key.toLowerCase()==='k'&&(e.ctrlKey||e.metaKey)))){
-            e.preventDefault();$('global-search').focus();
-          }
-        });
-      }
-      bindEvents();
-      initStorage();
-    })();
+      } catch(error){console.error("Firebase initialization error:",error);loadError="Connection setup failed.";renderAll();}
+    }
+    const route=location.hash.slice(1).split("/");
+    if(canonLetter(route[0]))selectedLetter=canonLetter(route[0]);
+    bindEvents();renderAll();connectLive();
   </script>
 </body>
 </html>
