@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="BeaconSearch — a browser-based SPL search reference.">
+  <title>BeaconSearch</title>
+  <style>
+    :root {
+      --bg: #212830;
+      --surface: #29343e;
+      --surface-raised: #303e49;
+      --code: #253b46;
+      --accent: #2fc0f0;
+      --accent-hover: #0d89b3;
+      --text: #f7fafc;
+      --secondary: #c1ced7;
+      --muted: #92a4b0;
+      --line: #465560;
+      --line-soft: #394854;
+      --active: rgba(47,192,240,.12);
+      --focus: rgba(47,192,240,.26);
+      --radius: 5px;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--text); background: var(--bg); font: 15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    button,input,textarea,select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+    ::selection { background: var(--accent); color: #0c202b; }
+    .shell { width: min(100% - 48px, 960px); margin: 0 auto; }
+    .topbar { padding: 34px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 22px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; color: var(--text); min-width: 0; }
+    .brand-mark { width: 46px; height: 46px; flex-shrink: 0; display: grid; place-items: center; border: 2px solid var(--accent); border-radius: 5px; color: var(--accent); font: 800 24px/1 Consolas,Monaco,monospace; box-shadow: inset 0 0 14px rgba(47,192,240,.08); }
+    .brand-name { display: block; font-weight: 800; font-size: clamp(24px,4.4vw,33px); letter-spacing: -.055em; line-height: 1.1; }
+    .brand-name em { color: var(--accent); font-style: normal; }
+    .brand-under { display: block; color: var(--muted); font: 11px/1.4 Consolas,Monaco,monospace; letter-spacing: .16em; margin-top: 5px; }
+    .top-actions { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; justify-content: flex-end; }
+    .btn { border: 1px solid var(--line); border-radius: var(--radius); background: transparent; color: var(--secondary); display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 12px; font-size: 13px; font-weight: 650; transition: background .17s,border-color .17s,color .17s; white-space: nowrap; }
+    .btn:hover { background: var(--surface); border-color: var(--accent); color: var(--text); }
+    .btn svg,.icon-btn svg,.filter-icon svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.9; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .btn.primary { color: #102b36; background: var(--accent); border-color: var(--accent); }
+    .btn.primary:hover { background: #69d3f4; border-color: #69d3f4; color: #102b36; }
+    .btn.subtle { border-color: transparent; color: var(--muted); }
+    .btn.subtle:hover { color: var(--accent); background: var(--surface); }
+    .btn.small { padding: 6px 9px; font-size: 12px; }
+    .intro { padding: 30px 0 24px; }
+    .intro p { color: var(--secondary); font-size: 15px; margin: 0; max-width: 720px; }
+    .intro .eyebrow { display: flex; align-items: center; gap: 8px; color: var(--accent); font: 12px/1.5 Consolas,Monaco,monospace; letter-spacing: .12em; margin-bottom: 11px; }
+    .dot { display: inline-block; background: var(--accent); width: 6px; height: 6px; border-radius: 50%; box-shadow: 0 0 9px rgba(47,192,240,.45); }
+    .section-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 9px 0 12px; }
+    .section-label { font-size: 11px; color: var(--muted); font-weight: 750; letter-spacing: .15em; margin: 0; text-transform: uppercase; }
+    .subtext { font-size: 12px; color: var(--muted); }
+    .letters { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 0 22px; border-bottom: 1px solid var(--line-soft); }
+    .letter { min-width: 45px; height: 43px; display: inline-flex; justify-content: center; align-items: center; border: 1px solid var(--line); background: transparent; border-radius: 4px; color: var(--secondary); font: 700 17px Consolas,Monaco,monospace; transition: .16s ease; }
+    .letter:hover { color: var(--accent); border-color: var(--accent); background: var(--active); }
+    .letter[aria-pressed="true"] { color: #0f2833; background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 2px rgba(47,192,240,.13); }
+    .letter.add { color: var(--accent); border-style: dashed; }
+    .letter.add svg { width: 17px; height: 17px; stroke: currentColor; stroke-width: 2; fill: none; }
+    .filter-section { margin-top: 30px; }
+    .search-field { position: relative; display: flex; align-items: center; border: 1px solid var(--accent); border-radius: 4px; background: var(--surface); transition: box-shadow .15s; }
+    .search-field:focus-within { box-shadow: 0 0 0 3px var(--focus); }
+    .filter-icon { color: var(--accent); display: flex; padding: 0 14px; }
+    .search-field input { border: 0; outline: 0; padding: 14px 0; width: 100%; min-width: 0; background: transparent; color: var(--text); font-size: 15px; }
+    input::placeholder,textarea::placeholder { color: #879ba7; opacity: 1; }
+    .shortcut { margin: 0 13px; border: 1px solid var(--line); border-radius: 4px; font: 11px Consolas,monospace; color: var(--muted); padding: 2px 6px; }
+    .investigation-row { padding: 24px 0 23px; border-bottom: 1px solid var(--line-soft); }
+    .filters { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .tag { border: 1px solid var(--accent); color: var(--accent); padding: 5px 11px; border-radius: 3px; font-size: 12px; background: transparent; max-width: 100%; overflow-wrap: anywhere; }
+    .tag:hover { color: var(--text); background: var(--active); }
+    .tag[aria-pressed="true"] { background: var(--accent); color: #0d2732; font-weight: 700; }
+    .category-controls { margin-top: 13px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .category-controls input { border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--text); padding: 9px 11px; width: min(100%,310px); font-size: 13px; }
+    .category-controls input:focus { border-color: var(--accent); outline: 0; }
+    .cat-create { color: var(--accent); font-size: 12px; }
+    .hidden { display: none !important; }
+    .results { padding-top: 23px; min-height: 300px; }
+    .result-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 25px; }
+    .result-title { font-size: 18px; font-weight: 750; margin: 0; letter-spacing: -.02em; }
+    .result-title strong { color: var(--accent); font-family: Consolas,Monaco,monospace; }
+    .result-sub { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .group { margin-bottom: 31px; }
+    .group-heading { display: flex; align-items: baseline; gap: 12px; padding-bottom: 9px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .group-heading h3 { font: 750 15px/1.5 system-ui,sans-serif; color: var(--text); margin: 0; }
+    .group-heading .group-num { color: var(--accent); font: 12px Consolas,monospace; }
+    .entry { border: 1px solid var(--line-soft); background: rgba(255,255,255,.015); border-radius: 5px; margin-bottom: 12px; overflow: hidden; }
+    .entry:hover { border-color: #53778c; }
+    .entry-title { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; padding: 13px 15px 10px; }
+    .entry-title h4 { margin: 0 auto 0 0; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
+    .entry-actions { display: flex; gap: 3px; margin-left: auto; }
+    .icon-btn { display: inline-flex; gap: 5px; align-items: center; justify-content: center; border: none; background: transparent; color: var(--muted); border-radius: 3px; padding: 6px 7px; font-size: 12px; }
+    .icon-btn:hover { background: var(--surface-raised); color: var(--accent); }
+    .entry-notes { padding: 0 15px 12px; font-size: 12px; color: var(--muted); margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .code-panel { margin: 0 12px 12px; background: var(--code); border: 1px solid #3c5968; border-radius: 4px; overflow: hidden; }
+    .code-toolbar { padding: 6px 12px; min-height: 39px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #3b5561; background: rgba(10,28,36,.13); }
+    .copy-btn { color: var(--accent); border: none; background: transparent; border-radius: 3px; font: 700 12px Consolas,Monaco,monospace; display: inline-flex; gap: 7px; align-items: center; padding: 5px 4px; }
+    .copy-btn:hover { color: #9be8ff; }
+    .copy-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.9; }
+    .code-lang { color: var(--muted); font: 700 10px Consolas,Monaco,monospace; letter-spacing: .15em; }
+    pre { margin: 0; padding: 13px 16px 15px; color: #f6fcff; white-space: pre; overflow-x: auto; font: 12.5px/1.75 Consolas,"Cascadia Code","SFMono-Regular",Monaco,monospace; tab-size: 2; }
+    .syn-key { color: #73d9fa; } .syn-pipe { color: #9ddef5; font-weight: 800; } .syn-str { color: #e0f0f8; } .syn-op { color: #75cdea; }
+    .entry-date { padding: 0 15px 12px; font: 11px Consolas,Monaco,monospace; color: var(--muted); }
+    .empty { padding: 46px 22px 55px; text-align: center; border: 1px dashed var(--line); border-radius: 5px; }
+    .empty-symbol { color: var(--accent); font: bold 32px Consolas,monospace; letter-spacing: -5px; margin: 0 5px 10px 0; }
+    .empty h3 { font-size: 17px; margin: 0 0 7px; }
+    .empty p { margin: 0 auto 19px; max-width: 390px; color: var(--muted); font-size: 13px; }
+    .footer { margin: 54px 0 22px; border-top: 1px solid var(--line); padding: 18px 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 12px Consolas,Monaco,monospace; }
+    .footer strong { color: var(--accent); font-weight: 500; }
+    .storage-dot { display: inline-block; height: 7px; width: 7px; margin-right: 7px; background: var(--accent); border-radius: 50%; }
+    .storage-dot.error { background: #f5b1a8; }
+    dialog { color: var(--text); background: var(--bg); border: 1px solid #557184; border-radius: 7px; width: min(100% - 24px, 610px); max-height: min(90vh,850px); padding: 0; box-shadow: 0 30px 90px rgba(0,0,0,.55); }
+    dialog::backdrop { background: rgba(6,17,24,.78); backdrop-filter: blur(3px); }
+    .dialog-top { padding: 20px 23px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .dialog-top h2 { margin: 0; font-size: 19px; }
+    .dialog-body { padding: 20px 23px 8px; display: grid; gap: 16px; }
+    .form-group { display: grid; gap: 6px; min-width: 0; }
+    .form-group label { font-size: 12px; font-weight: 700; color: var(--secondary); }
+    .form-group input,.form-group select,.form-group textarea { display: block; width: 100%; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--text); padding: 10px 12px; font-size: 14px; }
+    .form-group textarea { resize: vertical; font: 13px/1.6 Consolas,Monaco,monospace; min-height: 220px; tab-size: 2; }
+    .form-group textarea.notes { min-height: 60px; font-family: inherit; font-size: 13px; }
+    .form-row { display: grid; grid-template-columns: 120px 1fr; gap: 13px; }
+    .form-hint { color: var(--muted); font-size: 12px; margin: 0; }
+    .index-rule { background: var(--code); border-left: 3px solid var(--accent); border-radius: 3px; padding: 11px 12px; color: var(--secondary); font-size: 12px; }
+    .index-rule code { color: var(--accent); font: 700 13px Consolas,monospace; }
+    .dialog-actions { padding: 15px 23px 21px; display: flex; justify-content: flex-end; gap: 9px; }
+    #toast { position: fixed; z-index: 30; bottom: 24px; right: 24px; max-width: min(370px,90vw); color: #e8faff; background: #173e50; padding: 12px 16px; border: 1px solid var(--accent); border-radius: 5px; box-shadow: 0 9px 25px #0917208c; font-size: 13px; transition: opacity .2s,transform .2s; }
+    #toast.off { opacity: 0; transform: translateY(12px); pointer-events: none; }
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 28px,960px); }
+      .topbar { align-items: flex-start; flex-direction: column; padding-top: 23px; }
+      .top-actions { justify-content: flex-start; }
+      .intro { padding: 23px 0; }
+      .category-controls input { flex: 1 1 180px; }
+      .form-row { grid-template-columns: 1fr; }
+      dialog { max-height: 94vh; }
+      .dialog-body { padding: 15px 16px 8px; }
+      .dialog-top { padding: 15px 16px; }
+      .dialog-actions { padding: 12px 16px 16px; }
+      .footer { margin-top: 30px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition-duration: .01ms!important; scroll-behavior: auto!important; } }
+  </style>
+</head>
+<body>
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="ico-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m16.5 16.5 5 5"/></symbol>
+    <symbol id="ico-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="ico-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="ico-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l4.5-1 11-11a2.12 2.12 0 0 0-3-3l-11 11L4 20z"/></symbol>
+    <symbol id="ico-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+    <symbol id="ico-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+    <symbol id="ico-upload" viewBox="0 0 24 24"><path d="M12 17V4M7 9l5-5 5 5M4 17v4h16v-4"/></symbol>
+    <symbol id="ico-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
+    <symbol id="ico-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  </svg>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="BeaconSearch home">
+        <span class="brand-mark">B</span>
+        <span><span class="brand-name">Beacon<em>Search</em></span><span class="brand-under">SPL / SEARCH REFERENCE</span></span>
+      </a>
+      <div class="top-actions">
+        <button class="btn" id="export-button" title="Download a JSON backup"><svg><use href="#ico-download"/></svg> Backup</button>
+        <button class="btn" id="import-button" title="Import and merge a JSON backup"><svg><use href="#ico-upload"/></svg> Restore</button>
+        <button class="btn primary" id="new-search"><svg><use href="#ico-plus"/></svg> Add search</button>
+      </div>
+    </header>
+    <section class="intro" aria-label="Introduction">
+      <div class="eyebrow"><span class="dot"></span> CURATED QUERY LIBRARY</div>
+      <p>A lightweight reference for reusable SPL searches. Select a letter, browse investigations, and copy the query you need.</p>
+    </section>
+    <section aria-labelledby="letters-heading">
+      <div class="section-top"><h2 class="section-label" id="letters-heading">Letters</h2><span class="subtext" id="letter-total"></span></div>
+      <nav class="letters" id="letter-list" aria-label="Letters"></nav>
+    </section>
+    <section class="filter-section" aria-label="Search and filters">
+      <div class="section-top"><h2 class="section-label">Search</h2><span class="subtext" id="search-hint">Filter instantly</span></div>
+      <div class="search-field">
+        <span class="filter-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg></span>
+        <input id="global-search" type="search" autocomplete="off" spellcheck="false" placeholder="Search titles, categories or SPL..." aria-label="Search saved queries">
+        <kbd class="shortcut">/</kbd>
+      </div>
+      <div class="investigation-row">
+        <div class="section-top"><h2 class="section-label">Investigations</h2><span class="subtext">Select or type</span></div>
+        <div class="filters" id="category-list" aria-label="Investigation filters"></div>
+        <div class="category-controls">
+          <input id="category-input" type="text" maxlength="48" autocomplete="off" placeholder="Type investigation..." aria-label="Type investigation">
+          <button id="create-category" class="btn small hidden" type="button"><svg><use href="#ico-plus"/></svg><span id="create-category-text">Add</span></button>
+          <button id="clear-category" class="btn small subtle hidden" type="button">Clear</button>
+        </div>
+      </div>
+    </section>
+    <section class="results" aria-labelledby="results-heading">
+      <div class="result-head">
+        <div><h2 class="result-title" id="results-heading">Saved searches <strong id="result-letter">D</strong></h2><p class="result-sub" id="result-desc"></p></div>
+        <button class="btn small" id="add-inline"><svg><use href="#ico-plus"/></svg> Add search</button>
+      </div>
+      <div id="result-groups"></div>
+    </section>
+    <footer class="footer">
+      <span><strong>BeaconSearch</strong> · SPL · <span id="total-searches">0</span> saved</span>
+      <span><span class="storage-dot" id="storage-dot"></span><span id="storage-status">Connecting to local storage...</span> · <span title="Export backups to keep an additional copy">Backups recommended</span></span>
+    </footer>
+  </main>
+  <dialog id="search-dialog" aria-labelledby="search-dialog-title">
+    <form id="search-form">
+      <div class="dialog-top"><h2 id="search-dialog-title">Add search</h2><button type="button" class="icon-btn" data-close="search-dialog" aria-label="Close"><svg><use href="#ico-x"/></svg></button></div>
+      <div class="dialog-body">
+        <div class="form-group"><label for="entry-title">Title</label><input type="text" id="entry-title" required maxlength="120" placeholder="e.g. IP activity timeline"></div>
+        <div class="form-row">
+          <div class="form-group"><label for="entry-letter">Letter</label><select id="entry-letter" required></select></div>
+          <div class="form-group"><label for="entry-category">Investigation</label><input type="text" id="entry-category" list="category-suggestions" maxlength="48" required placeholder="IP, Host, Username, Other..."><datalist id="category-suggestions"></datalist></div>
+        </div>
+        <div class="form-group"><label for="entry-code">SPL</label><textarea id="entry-code" spellcheck="false" required placeholder="src_ip=\"1.2.3.4\"&#10;| stats count by src_ip, dest_ip, action"></textarea></div>
+        <p class="index-rule">Automatic scope: <code id="index-preview">index=*D*</code><br>Any pasted <code>index=...</code> or <code>index IN (...)</code> value is replaced with the selected letter's index.</p>
+        <div class="form-group"><label for="entry-notes">Notes <span style="font-weight:400;color:var(--muted)">(optional)</span></label><textarea class="notes" id="entry-notes" maxlength="1000" placeholder="Quick usage notes..."></textarea></div>
+      </div>
+      <div class="dialog-actions"><button type="button" class="btn" data-close="search-dialog">Cancel</button><button class="btn primary" type="submit"><svg><use href="#ico-check"/></svg> Save search</button></div>
+    </form>
+  </dialog>
+  <dialog id="letter-dialog" aria-labelledby="letter-dialog-title">
+    <form id="letter-form">
+      <div class="dialog-top"><h2 id="letter-dialog-title">Add letter</h2><button type="button" class="icon-btn" data-close="letter-dialog" aria-label="Close"><svg><use href="#ico-x"/></svg></button></div>
+      <div class="dialog-body">
+        <div class="form-group"><label for="new-letter-input">Letter</label><input id="new-letter-input" required maxlength="1" pattern="[A-Za-z]" autocomplete="off" placeholder="A" style="text-transform:uppercase"></div>
+        <p class="form-hint">Each letter gets its own investigations and automatically scoped SPL searches.</p>
+      </div>
+      <div class="dialog-actions"><button type="button" class="btn" data-close="letter-dialog">Cancel</button><button type="submit" class="btn primary">Add</button></div>
+    </form>
+  </dialog>
+  <input type="file" id="restore-file" accept="application/json,.json" class="hidden">
+  <div id="toast" class="off" aria-live="polite" role="status"></div>
+  <script>
+    (() => {
+      'use strict';
+      const $ = (id) => document.getElementById(id);
+      const DEFAULT_CATEGORIES = ['IP','Host','Username','Other'];
+      const DB_NAME = 'BeaconSearchVault';
+      const STORE_NAME = 'snapshots';
+      const STORE_KEY = 'main';
+      const icons = (name) => `<svg aria-hidden="true"><use href="#ico-${name}"></use></svg>`;
+      const now = () => new Date().toISOString();
+      const uid = () => (globalThis.crypto?.randomUUID?.() || `s-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+      const canonLetter = (v) => /^[A-Z]$/.test(String(v).trim().toUpperCase()) ? String(v).trim().toUpperCase() : null;
+      const escapeHtml = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const scope = (letter) => `index=*${letter}*`;
+      function scopeSPL(raw,letter) {
+        const index = scope(letter);
+        let result = String(raw || '').replace(/\r\n?/g,'\n').trim();
+        if (!result) return index;
+        // Replace indexes even in pasted full queries, rather than keeping an identifying index name.
+        const inIndex = /\bindex\s+IN\s*\([^)]*\)/gi;
+        const equalIndex = /\bindex\s*=\s*(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s|,\])}]+)/gi;
+        const containsIndex = inIndex.test(result) || equalIndex.test(result);
+        result = result.replace(inIndex,index).replace(equalIndex,index);
+        if (!containsIndex) result = `${index}\n${result}`;
+        return result;
+      }
+      function initialData(){
+        const stamp = now();
+        const demo = (letter,category,title,code,notes='') => ({id:uid(),letter,category,title,spl:scopeSPL(code,letter),notes,createdAt:stamp,updatedAt:stamp});
+        return {
+          version:1, letters:['D','M','W'],
+          categories:{D:[...DEFAULT_CATEGORIES],M:[...DEFAULT_CATEGORIES],W:[...DEFAULT_CATEGORIES]},
+          searches:[
+            demo('D','IP','IP activity overview','src_ip="1.2.3.4"\n| stats count by src_ip, dest_ip, action\n| sort - count'),
+            demo('D','Host','Host event overview','host="HOSTNAME"\n| stats count by host, sourcetype\n| sort - count'),
+            demo('D','Username','Username activity','user="USERNAME"\n| stats count by user, action\n| sort - count'),
+            demo('M','IP','IP connection summary','src_ip="1.2.3.4"\n| stats count by src_ip, dest_ip, dest_port, action'),
+            demo('W','Host','Host error review','host="HOSTNAME" (error OR failed)\n| stats count by host, source, sourcetype')
+          ]
+        };
+      }
+      function sanitizeData(value){
+        const clean = {version:1,letters:[],categories:{},searches:[]};
+        if(!value || typeof value !== 'object') throw new Error('Invalid backup format');
+        for(const v of Array.isArray(value.letters) ? value.letters : []) {
+          const letter=canonLetter(v); if(letter && !clean.letters.includes(letter)) clean.letters.push(letter);
+        }
+        const catSrc=value.categories && typeof value.categories==='object' ? value.categories : {};
+        for(const [key, vals] of Object.entries(catSrc)){
+          const letter=canonLetter(key); if(!letter) continue;
+          if(!clean.letters.includes(letter)) clean.letters.push(letter);
+          clean.categories[letter]=uniqueCategories([...DEFAULT_CATEGORIES,...(Array.isArray(vals) ? vals : [])]);
+        }
+        const items=Array.isArray(value.searches) ? value.searches.slice(0,20000) : [];
+        for(const entry of items){
+          if(!entry || typeof entry!=='object') continue;
+          const letter=canonLetter(entry.letter); if(!letter) continue;
+          if(!clean.letters.includes(letter)) clean.letters.push(letter);
+          const category=String(entry.category||'Other').trim().slice(0,48) || 'Other';
+          const title=String(entry.title||'Untitled').trim().slice(0,120) || 'Untitled';
+          const code=String(entry.spl||entry.code||'').slice(0,150000);
+          const notes=String(entry.notes||'').slice(0,1000);
+          if(!code.trim()) continue;
+          const id=String(entry.id||uid()).slice(0,100);
+          const date=(v)=> (typeof v==='string' && !Number.isNaN(Date.parse(v))) ? v : now();
+          clean.searches.push({id,letter,category,title,spl:scopeSPL(code,letter),notes,createdAt:date(entry.createdAt),updatedAt:date(entry.updatedAt)});
+          clean.categories[letter]=uniqueCategories([...(clean.categories[letter]||DEFAULT_CATEGORIES),category]);
+        }
+        if(!clean.letters.length) clean.letters=['D','M','W'];
+        for(const letter of clean.letters) clean.categories[letter]=uniqueCategories([...(clean.categories[letter]||DEFAULT_CATEGORIES)]);
+        return clean;
+      }
+      function uniqueCategories(values){
+        const used=new Set(), result=[];
+        for(const cat of values) {
+          if(typeof cat!=='string') continue;
+          const value=cat.trim().slice(0,48);
+          if(!value || used.has(value.toLowerCase()) || value.toLowerCase()==='all') continue;
+          used.add(value.toLowerCase()); result.push(value);
+        }
+        return result;
+      }
+      let data = initialData();
+      let selectedLetter='D', selectedCategory='All', query='', categoryQuery='', editId=null;
+      let db=null,storageMode='pending',writeQueue=Promise.resolve(),writeGeneration=0;
+      let toastTimer=null;
+      function toast(message){
+        const el=$('toast');el.textContent=message;el.classList.remove('off');
+        clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('off'),3100);
+      }
+      function storageStatus(msg,failed=false){
+        $('storage-status').textContent=msg;
+        $('storage-dot').classList.toggle('error',failed);
+      }
+      function openDB(){
+        return new Promise((resolve,reject)=>{
+          if(!('indexedDB' in globalThis)) return reject(new Error('IndexedDB unsupported'));
+          const request=indexedDB.open(DB_NAME,1);
+          request.onupgradeneeded=()=>{
+            const database=request.result;
+            if(!database.objectStoreNames.contains(STORE_NAME)) database.createObjectStore(STORE_NAME);
+          };
+          request.onsuccess=()=>resolve(request.result);
+          request.onerror=()=>reject(request.error||new Error('Unable to open storage'));
+          request.onblocked=()=>reject(new Error('Storage blocked'));
+        });
+      }
+      function idbGet(){return new Promise((resolve,reject)=>{
+        const tx=db.transaction(STORE_NAME,'readonly');
+        const req=tx.objectStore(STORE_NAME).get(STORE_KEY);
+        req.onsuccess=()=>resolve(req.result ?? null);
+        req.onerror=()=>reject(req.error);
+      });}
+      function idbPut(value){return new Promise((resolve,reject)=>{
+        const tx=db.transaction(STORE_NAME,'readwrite');
+        tx.objectStore(STORE_NAME).put(value,STORE_KEY);
+        tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);
+        tx.onabort=()=>reject(tx.error||new Error('Save interrupted'));
+      });}
+      async function initStorage(){
+        try {
+          db=await openDB();storageMode='idb';
+          const stored=await idbGet();
+          if(stored){data=sanitizeData(stored);}else{await idbPut(data);}
+          storageStatus('Saved in this browser');
+        } catch(err){
+          console.warn('Browser storage fallback:',err);
+          try{
+            const raw=localStorage.getItem(DB_NAME);
+            if(raw)data=sanitizeData(JSON.parse(raw));
+            else localStorage.setItem(DB_NAME,JSON.stringify(data));
+            storageMode='local';storageStatus('Local browser storage');
+          }catch(err2){
+            console.error('Storage unavailable:',err2);
+            storageMode='none';storageStatus('Storage unavailable — export backup',true);
+            toast('Storage is unavailable. Back up your work before closing.');
+          }
+        }
+        const h=decodeURIComponent(location.hash.slice(1)).split('/');
+        if(h[0] && data.letters.includes(h[0].toUpperCase())) {
+          selectedLetter=h[0].toUpperCase();
+          const category=data.categories[selectedLetter].find(c=>c.toLowerCase()===(h[1]||'').toLowerCase());
+          if(category) selectedCategory=category;
+        }
+        renderAll();
+      }
+      function persist(){
+        const snapshot=JSON.parse(JSON.stringify(data));
+        const version=++writeGeneration;
+        storageStatus('Saving...');
+        writeQueue=writeQueue.catch(()=>{}).then(async()=>{
+          if(storageMode==='idb') await idbPut(snapshot);
+          else if(storageMode==='local') localStorage.setItem(DB_NAME,JSON.stringify(snapshot));
+          else throw new Error('No persistent storage available');
+          if(version===writeGeneration) storageStatus(storageMode==='idb'?'Saved in this browser':'Local browser storage');
+        }).catch(err=>{
+          console.error('Save failed:',err);
+          storageStatus('Save failed — export backup',true);
+          toast('Local save failed. Export a backup now.');
+        });
+        return writeQueue;
+      }
+      function updateHash(){
+        const value=`${selectedLetter}${selectedCategory==='All'?'':`/${encodeURIComponent(selectedCategory)}`}`;
+        if(location.hash.slice(1)!==value) history.replaceState(null,'',`#${value}`);
+      }
+      function renderLetters(){
+        $('letter-list').replaceChildren();
+        for(const letter of data.letters){
+          const btn=document.createElement('button');btn.type='button';btn.className='letter';btn.textContent=letter;
+          btn.setAttribute('aria-label',letter);btn.setAttribute('aria-pressed',String(selectedLetter===letter));
+          btn.addEventListener('click',()=>{
+            selectedLetter=letter;selectedCategory='All';categoryQuery='';$('category-input').value='';
+            renderAll();updateHash();
+          });$('letter-list').append(btn);
+        }
+        const add=document.createElement('button');add.type='button';add.className='letter add';add.title='Add letter';add.setAttribute('aria-label','Add letter');add.innerHTML=icons('plus');
+        add.addEventListener('click',()=>{$('new-letter-input').value='';$('letter-dialog').showModal();$('new-letter-input').focus();});
+        $('letter-list').append(add);
+        $('letter-total').textContent=`${data.letters.length} total`;
+      }
+      function renderCategories(){
+        const container=$('category-list');container.replaceChildren();
+        const cats=['All',...(data.categories[selectedLetter]||DEFAULT_CATEGORIES)];
+        const matches=cats.filter(c=>c==='All'||!categoryQuery||c.toLowerCase().includes(categoryQuery.toLowerCase()));
+        for(const cat of matches){
+          const btn=document.createElement('button');btn.type='button';btn.className='tag';btn.textContent=cat;
+          btn.setAttribute('aria-pressed',String(selectedCategory===cat));
+          btn.addEventListener('click',()=>{
+            selectedCategory=cat;categoryQuery='';$('category-input').value='';renderCategories();renderResults();updateHash();
+          });container.append(btn);
+        }
+        if(!cats.some(c=>c!=='All'&&(!categoryQuery||c.toLowerCase().includes(categoryQuery.toLowerCase())))){
+          const info=document.createElement('span');info.className='subtext';info.textContent='No matching investigation';container.append(info);
+        }
+        const trimmed=categoryQuery.trim();
+        const exact=cats.some(c=>c.toLowerCase()===trimmed.toLowerCase());
+        $('create-category').classList.toggle('hidden',!trimmed||exact);
+        $('create-category-text').textContent=trimmed?`Add “${trimmed}”`:'Add';
+        $('clear-category').classList.toggle('hidden',!trimmed);
+      }
+      function filteredEntries(){
+        const general=query.toLowerCase().trim(), byCategory=categoryQuery.toLowerCase().trim();
+        return data.searches.filter(s=>s.letter===selectedLetter &&
+          (selectedCategory==='All'||s.category.toLowerCase()===selectedCategory.toLowerCase()) &&
+          (!byCategory||s.category.toLowerCase().includes(byCategory)) &&
+          (!general||[s.title,s.category,s.spl,s.notes].some(v=>v.toLowerCase().includes(general)))
+        );
+      }
+      function codeToHTML(code){
+        const token=/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:index|source|sourcetype|host|src_ip|dest_ip|dest_port|user|stats|count|by|where|table|dedup|eval|search|sort|head|bin|timechart|earliest|latest|rex|spath|values|dc|as|AND|OR|NOT)\b|\|)/gi;
+        let out='',cursor=0,match;
+        while((match=token.exec(code))){
+          out+=escapeHtml(code.slice(cursor,match.index));
+          const part=match[0],kind=part==='|'?'syn-pipe':/^["']/.test(part)?'syn-str':'syn-key';
+          out+=`<span class="${kind}">${escapeHtml(part)}</span>`;cursor=match.index+part.length;
+        }
+        return out+escapeHtml(code.slice(cursor));
+      }
+      function makeEntry(entry){
+        const article=document.createElement('article');article.className='entry';
+        const safeSPL=scopeSPL(entry.spl,entry.letter);
+        const date=new Date(entry.updatedAt).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+        article.innerHTML=`
+          <div class="entry-title"><h4>${escapeHtml(entry.title)}</h4>
+            <div class="entry-actions"><button type="button" class="icon-btn edit" title="Edit search" aria-label="Edit ${escapeHtml(entry.title)}">${icons('edit')} Edit</button>
+            <button type="button" class="icon-btn delete" title="Delete search" aria-label="Delete ${escapeHtml(entry.title)}">${icons('trash')}</button></div>
+          </div>
+          ${entry.notes ? `<p class="entry-notes">${escapeHtml(entry.notes)}</p>` : ''}
+          <div class="code-panel"><div class="code-toolbar"><button type="button" class="copy-btn">${icons('copy')} <span>Copy</span></button><span class="code-lang">SPL</span></div><pre><code>${codeToHTML(safeSPL)}</code></pre></div>
+          <div class="entry-date">Updated ${escapeHtml(date)}</div>`;
+        article.querySelector('.edit').addEventListener('click',()=>openSearch(entry.id));
+        article.querySelector('.delete').addEventListener('click',()=>deleteEntry(entry.id));
+        article.querySelector('.copy-btn').addEventListener('click',async(ev)=>{
+          try{await copyText(safeSPL);const btn=ev.currentTarget;btn.innerHTML=`${icons('check')} <span>Copied</span>`;
+            setTimeout(()=>{if(btn.isConnected)btn.innerHTML=`${icons('copy')} <span>Copy</span>`;},1700);
+          }catch(error){console.error(error);toast('Copy failed. Select the code and copy manually.');}
+        });
+        return article;
+      }
+      async function copyText(text){
+        if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+        const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';
+        document.body.append(area);area.focus();area.select();
+        const success=document.execCommand('copy');area.remove();if(!success) throw new Error('Copy blocked');
+      }
+      function renderResults(){
+        $('result-letter').textContent=selectedLetter;
+        const matches=filteredEntries();
+        const total=data.searches.filter(s=>s.letter===selectedLetter).length;
+        $('result-desc').textContent=`${matches.length} shown · ${total} saved under ${selectedLetter}`;
+        $('total-searches').textContent=String(data.searches.length);
+        const dest=$('result-groups');dest.replaceChildren();
+        if(!matches.length){
+          const empty=document.createElement('div');empty.className='empty';
+          const filtered=!!(query||categoryQuery||selectedCategory!=='All');
+          empty.innerHTML=`<div class="empty-symbol">&gt;_</div><h3>${filtered?'No matching searches':'Nothing saved here yet'}</h3>
+          <p>${filtered?'Try another search or investigation, or add a new search.':'Add your first SPL search. It will be saved locally under this letter.'}</p>
+          <button type="button" class="btn primary">${icons('plus')} Add search</button>`;
+          empty.querySelector('button').addEventListener('click',()=>openSearch());dest.append(empty);return;
+        }
+        const cats=data.categories[selectedLetter]||DEFAULT_CATEGORIES;
+        for(const cat of cats){
+          const items=matches.filter(s=>s.category.toLowerCase()===cat.toLowerCase());
+          if(!items.length)continue;
+          items.sort((a,b)=>a.title.localeCompare(b.title));
+          const group=document.createElement('div');group.className='group';
+          const h=document.createElement('div');h.className='group-heading';
+          const title=document.createElement('h3');title.textContent=cat;
+          const count=document.createElement('span');count.className='group-num';count.textContent=String(items.length).padStart(2,'0');
+          h.append(title,count);group.append(h);
+          for(const entry of items)group.append(makeEntry(entry));
+          dest.append(group);
+        }
+      }
+      function renderAll(){renderLetters();renderCategories();renderResults();}
+      function populateLetterSelect(letter){
+        const sel=$('entry-letter');sel.replaceChildren();
+        for(const l of data.letters){const opt=document.createElement('option');opt.value=l;opt.textContent=l;sel.append(opt);}
+        sel.value=letter;updateCategorySuggestions();updateScopePreview();
+      }
+      function updateCategorySuggestions(){
+        const dl=$('category-suggestions');dl.replaceChildren();
+        for(const cat of data.categories[$('entry-letter').value]||DEFAULT_CATEGORIES){
+          const op=document.createElement('option');op.value=cat;dl.append(op);
+        }
+      }
+      function updateScopePreview(){$('index-preview').textContent=scope($('entry-letter').value||selectedLetter);}
+      function openSearch(id=null){
+        editId=id;
+        const entry=id?data.searches.find(s=>s.id===id):null;
+        $('search-dialog-title').textContent=entry?'Edit search':'Add search';
+        $('entry-title').value=entry?.title||'';
+        populateLetterSelect(entry?.letter||selectedLetter);
+        $('entry-category').value=entry?.category||(selectedCategory!=='All'?selectedCategory:'IP');
+        $('entry-code').value=entry?.spl||'';
+        $('entry-notes').value=entry?.notes||'';
+        $('search-dialog').showModal();$('entry-title').focus();
+      }
+      function addCategory(raw,shouldSelect=true){
+        const category=raw.trim().slice(0,48);
+        if(!category||category.toLowerCase()==='all'){toast('Enter an investigation name.');return;}
+        const list=data.categories[selectedLetter];
+        const existing=list.find(c=>c.toLowerCase()===category.toLowerCase());
+        const chosen=existing||category;
+        if(!existing){list.push(chosen);persist();toast(`Added ${chosen}`);}
+        if(shouldSelect){selectedCategory=chosen;categoryQuery='';$('category-input').value='';}
+        renderCategories();renderResults();updateHash();
+      }
+      function deleteEntry(id){
+        const entry=data.searches.find(s=>s.id===id);if(!entry)return;
+        if(!confirm(`Delete “${entry.title}”? This cannot be undone unless you have a backup.`))return;
+        data.searches=data.searches.filter(s=>s.id!==id);
+        persist();renderResults();toast('Search deleted');
+      }
+      function exportJSON(){
+        const payload={app:'BeaconSearch',format:1,exportedAt:now(),...data};
+        const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');a.href=url;a.download=`BeaconSearch-backup-${new Date().toISOString().slice(0,10)}.json`;
+        document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+        toast('Backup downloaded');
+      }
+      async function importJSON(file){
+        if(!file)return;
+        if(file.size>12*1024*1024){toast('Backup is too large.');return;}
+        try{
+          const parsed=JSON.parse(await file.text());
+          if(parsed.app && parsed.app!=='BeaconSearch') throw new Error('Not a BeaconSearch backup');
+          if(!Array.isArray(parsed.letters)||!Array.isArray(parsed.searches))throw new Error('Invalid backup contents');
+          const incoming=sanitizeData(parsed);
+          let added=0;
+          for(const letter of incoming.letters){
+            if(!data.letters.includes(letter)) data.letters.push(letter);
+            data.categories[letter]=uniqueCategories([...(data.categories[letter]||DEFAULT_CATEGORIES),...incoming.categories[letter]]);
+          }
+          const existing=new Map(data.searches.map(s=>[s.id,s]));
+          for(const entry of incoming.searches){
+            const prior=existing.get(entry.id);
+            if(prior && JSON.stringify(prior)===JSON.stringify(entry)) continue;
+            const next=prior?{...entry,id:uid()}:entry;
+            data.searches.push(next);existing.set(next.id,next);added++;
+          }
+          persist();renderAll();toast(`Restore complete · ${added} searches added`);
+        } catch(err){console.error(err);toast('Restore failed: '+err.message);}
+      }
+      function bindEvents(){
+        $('new-search').addEventListener('click',()=>openSearch());
+        $('add-inline').addEventListener('click',()=>openSearch());
+        $('export-button').addEventListener('click',exportJSON);
+        $('import-button').addEventListener('click',()=>$('restore-file').click());
+        $('restore-file').addEventListener('change',async e=>{await importJSON(e.target.files?.[0]);e.target.value='';});
+        $('global-search').addEventListener('input',e=>{query=e.target.value;renderResults();});
+        $('category-input').addEventListener('input',e=>{
+          categoryQuery=e.target.value;selectedCategory='All';renderCategories();renderResults();updateHash();
+        });
+        $('category-input').addEventListener('keydown',e=>{
+          if(e.key==='Enter'){e.preventDefault();if(categoryQuery.trim()){
+            const match=data.categories[selectedLetter].find(c=>c.toLowerCase()===categoryQuery.trim().toLowerCase());
+            if(match)addCategory(match);else addCategory(categoryQuery);
+          }}
+        });
+        $('create-category').addEventListener('click',()=>addCategory(categoryQuery));
+        $('clear-category').addEventListener('click',()=>{categoryQuery='';$('category-input').value='';renderCategories();renderResults();});
+        $('entry-letter').addEventListener('change',()=>{updateCategorySuggestions();updateScopePreview();});
+        $('search-form').addEventListener('submit',e=>{
+          e.preventDefault();
+          const title=$('entry-title').value.trim();
+          const letter=canonLetter($('entry-letter').value);
+          const category=$('entry-category').value.trim();
+          const raw=$('entry-code').value.trim();
+          if(!title||!letter||!category||!raw){toast('Complete the required fields.');return;}
+          if(category.toLowerCase()==='all'){toast('Choose an investigation other than All.');return;}
+          const existing=data.categories[letter].find(c=>c.toLowerCase()===category.toLowerCase());
+          const chosen=existing||category;
+          if(!existing)data.categories[letter].push(chosen);
+          const prior=editId?data.searches.find(s=>s.id===editId):null;
+          const item={id:prior?.id||uid(),letter,category:chosen,title,spl:scopeSPL(raw,letter),notes:$('entry-notes').value.trim(),createdAt:prior?.createdAt||now(),updatedAt:now()};
+          if(prior)Object.assign(prior,item);else data.searches.push(item);
+          selectedLetter=letter;selectedCategory=chosen;categoryQuery='';query='';$('global-search').value='';$('category-input').value='';
+          $('search-dialog').close();persist();renderAll();updateHash();toast(prior?'Search updated':'Search saved');
+          // Ask the browser to protect site data where supported; a backup is still recommended.
+          if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{});
+        });
+        $('letter-form').addEventListener('submit',e=>{
+          e.preventDefault();
+          const letter=canonLetter($('new-letter-input').value);
+          if(!letter){toast('Enter a single letter (A–Z).');return;}
+          if(data.letters.includes(letter)){toast('That letter already exists.');return;}
+          data.letters.push(letter);data.categories[letter]=[...DEFAULT_CATEGORIES];
+          selectedLetter=letter;selectedCategory='All';categoryQuery='';$('category-input').value='';
+          $('letter-dialog').close();persist();renderAll();updateHash();toast(`Added ${letter}`);
+        });
+        document.querySelectorAll('[data-close]').forEach(btn=>btn.addEventListener('click',()=>$(btn.dataset.close).close()));
+        document.addEventListener('keydown',e=>{
+          const inEditor=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+          const dialogOpen=!!document.querySelector('dialog[open]');
+          if(!dialogOpen&&!inEditor&&(e.key==='/'||(e.key.toLowerCase()==='k'&&(e.ctrlKey||e.metaKey)))){
+            e.preventDefault();$('global-search').focus();
+          }
+        });
+      }
+      bindEvents();
+      initStorage();
+    })();
+  </script>
+</body>
+</html>
